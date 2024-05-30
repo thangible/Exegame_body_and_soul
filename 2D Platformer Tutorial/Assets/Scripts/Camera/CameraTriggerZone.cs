@@ -3,14 +3,14 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-// Create trigger zones (https://www.youtube.com/watch?v=1BdR5d1JTEI)
+// create trigger zones (https://www.youtube.com/watch?v=1BdR5d1JTEI) 
 public class TriggerZone : MonoBehaviour
 {
     public bool triggerOnce = false;
     private bool alreadyEntered = false;
     private bool alreadyExited = false;
 
-    public string collisionTag;
+    public string collisionTag = "Player";
 
     public GameObject cameraBoundsWallCollider;
     public bool activateWallColliderFromLeft = true; // else FromRight
@@ -21,7 +21,6 @@ public class TriggerZone : MonoBehaviour
     public UnityEvent onTriggerEnterFromRight;
     public UnityEvent onTriggerExitToLeft;
     public UnityEvent onTriggerExitToRight;
-
 
     void Start()
     {

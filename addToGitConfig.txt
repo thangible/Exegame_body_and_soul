@@ -1,10 +1,14 @@
 git clone -c core.longpaths=true <repo-url>
 
-git config --global core.autocrlf input
-git add --renormalize .
-
 git config --system core.longpaths true
 git config --global core.longpaths true
+
+
+
+
+
+git config --global core.autocrlf input
+git add --renormalize .
 
 
 https://stackoverflow.com/questions/1967370/git-replacing-lf-with-crlf

@@ -15,4 +15,5 @@ public class AnimationStrings : MonoBehaviour
     internal static string isOnCeiling = "isOnCeiling";
 
     internal static string fallThroughPlatform = "fallThroughPlatform";
+
 }

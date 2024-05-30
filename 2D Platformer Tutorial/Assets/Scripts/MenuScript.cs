@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+// put somewhere in the scene (f.E. on the camera)
 public class MenuScript : MonoBehaviour
 {
     public Button[] buttons;
