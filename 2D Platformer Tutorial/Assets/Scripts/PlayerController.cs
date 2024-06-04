@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     Vector2 moveInput;
     TouchingDirections touchingDirections;
 
+    //private static bool isPlayerAlive = true;
+
     //private GameObject currentOneWayPlatform;
     //private float secondsToFallThroughPlatform = 0.25f;
 
@@ -322,5 +324,47 @@ public class PlayerController : MonoBehaviour
     } */
 
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // handle collision with hostile object
+        if (collision.gameObject.CompareTag("Hostile") || collision.gameObject.layer == LayerMask.NameToLayer("Hostile"))
+        {
+            gameObject.SetActive(false);
+            RespawnController.instance.AnnouncePlayerDeath();
+        }
+
+        // handle being crushed between 2 objects
+        bool collidedWithCrushObstacle1 = false;
+        bool collidedWithCrushObstacle2 = true; // TODO fix this with = false
+        // Check for collision with Obstacle1
+        if (collision.gameObject.CompareTag("PlayerCrushOne"))
+        {
+            collidedWithCrushObstacle1 = true;
+        }
+        // Check for collision with Obstacle2
+        if (collision.gameObject.CompareTag("PlayerCrushTwo"))
+        {
+            collidedWithCrushObstacle2 = true;
+        }
+
+        // If collided with both obstacles, set the player inactive
+        if (collidedWithCrushObstacle1 && collidedWithCrushObstacle2)
+        {
+            gameObject.SetActive(false);
+            RespawnController.instance.AnnouncePlayerDeath();
+        }
+    }
+
+    /*
+    public static void AnnouncePlayerDeath(bool isPlayerDead = true)
+    {
+        isPlayerAlive = !isPlayerDead;
+    }
+
+    public static bool IsPlayerAlive()
+    {
+        return isPlayerAlive;
+    } 
+    */
 
 }

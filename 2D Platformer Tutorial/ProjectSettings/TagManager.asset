@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - FlyingBoss
+  - BossArea
+  - DespawnCollider
+  - Projectile
+  - Hostile
+  - PlayerCrushOne
+  - PlayerCrushTwo
   layers:
   - Default
   - TransparentFX
@@ -14,8 +21,8 @@ TagManager:
   - Ground
   - Player
   - OneWayPlatform
-  - 
-  - 
+  - Background
+  - Hostile
   - 
   - 
   - 

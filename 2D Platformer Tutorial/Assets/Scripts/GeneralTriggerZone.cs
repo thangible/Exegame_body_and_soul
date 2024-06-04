@@ -18,11 +18,6 @@ public class GeneralTriggerZone : MonoBehaviour
     public UnityEvent onTriggerExitToRight;
 
 
-    void Start()
-    {
-
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (alreadyEntered)

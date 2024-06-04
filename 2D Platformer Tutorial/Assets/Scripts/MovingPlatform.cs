@@ -166,6 +166,7 @@ public class MovingPlatform : MonoBehaviour
             }
         }
 
+        // movement after collision
         if (collison || (!collison && Vector3.Distance(platform.transform.localPosition, nextLocation) <= 0.01f)) // depending on the first platform (because they move in sync)
         {
             if (!movePlatformOnce)

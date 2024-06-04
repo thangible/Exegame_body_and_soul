@@ -33,6 +33,7 @@ public class WindArea : MonoBehaviour
     private float windEffectTimer = 0.0f;
     private bool minYVelocityReached = false;
     private bool additionalForceCooldownReady = false;
+    float colliderYEnd = 0f;
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -44,6 +45,7 @@ public class WindArea : MonoBehaviour
             return;
 
         playerInZone = true;
+        colliderYEnd = GetColliderYEnd();
 
         onTriggerEnter?.Invoke();
     }
@@ -85,16 +87,30 @@ public class WindArea : MonoBehaviour
                 additionalForceCooldownReady = true;
             }
 
+
             // add additional force to simulate wind
             if (additionalForceCooldownReady && Random.value < additionalForceChance && maxTimesAdditionalForce > timesAdditionalForceCounter)
             {
-                ApplyAdditionalForce(rb);
-                StartCoroutine(AdditionalForceCooldown());
-                timesAdditionalForceCounter += 1;
+                if (Mathf.Abs(collision.transform.position.y - colliderYEnd) > 5f) // dont apply a force near the end of the wind zone
+                {
+                    ApplyAdditionalForce(rb);
+                    StartCoroutine(AdditionalForceCooldown());
+                    timesAdditionalForceCounter += 1;
+                }
             }
         }
     }
 
+
+    private float GetColliderYEnd()
+    {
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            return collider.bounds.min.y;
+        }
+        return 0f;
+    }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
