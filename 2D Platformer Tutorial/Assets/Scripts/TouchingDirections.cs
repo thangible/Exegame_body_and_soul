@@ -65,6 +65,7 @@ public class TouchingDirections : MonoBehaviour
         }
     }
 
+
     Rigidbody2D rb;
     CapsuleCollider2D touchingCol;
     Animator animator;

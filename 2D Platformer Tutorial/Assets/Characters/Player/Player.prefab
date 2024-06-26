@@ -117,7 +117,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &2198862189583792473
 CapsuleCollider2D:
@@ -166,18 +166,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2c8a1af513a4a14cb70484bf490e66a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 8
-  airWalkSpeed: 7
-  jumpImpulse: 8
+  walkSpeed: 12
+  runSpeed: 16
+  airWalkSpeed: 16
+  jumpImpulse: 12
   jumpCounter: 0
+  fallDamageThreshold: 15
   dashingImpulse: 24
+  attackRange: 2
+  attackDamage: 1
+  attackCooldown: 0.6
+  destroyableTag: DestroyableObject
   _isMoving: 0
-  _isRunning: 1
+  _isRunning: 0
   _isFacingRight: 1
   _isDashing: 0
+  _isFalling: 0
   playerCollider: {fileID: 2198862189583792473}
   trailRenderer: {fileID: 8111537887898809010}
+  oneWayPlatformLayerName: OneWayPlatform
+  playerLayerName: Player
 --- !u!114 &978337921537165426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,10 +231,6 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 8fa7a8ad-5887-475c-b450-0d57beb757bd
     m_ActionName: Player/Look[/Mouse/delta]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 5a5a651b-3d0b-4516-af8c-0f318bb04f41
-    m_ActionName: Player/Attack[/Mouse/leftButton]
   - m_PersistentCalls:
       m_Calls: []
     m_ActionId: 377db7e1-02ab-43f3-b7d3-7f3dc231bb04
@@ -300,9 +304,41 @@ MonoBehaviour:
     m_ActionId: 98f88d2e-c507-455d-8b32-1bb0d4d5e251
     m_ActionName: Player/Jump[/Keyboard/space]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8021179534268199227}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnDash
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e2253e1a-9ecf-42b4-8af2-821ac0a73c81
-    m_ActionName: Player/Dash[/Keyboard/e]
+    m_ActionName: Player/Dash[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 49c38385-f56d-4a79-a79b-4e79677b1525
+    m_ActionName: Player/FallThroughPlatform[/Keyboard/s]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8021179534268199227}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1772ae58-0eca-44d4-8ddc-151a9dce6ce7
+    m_ActionName: Player/Attack[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -358,6 +394,11 @@ MonoBehaviour:
   groundDistance: 0.05
   wallDistance: 0.2
   ceilingDistance: 0.05
+  rayCastOrigin: {fileID: 0}
+  playerFeet: {fileID: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
   _isGrounded: 1
   _isOnWall: 0
   _isOnCeiling: 0
@@ -382,7 +423,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -403,7 +444,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 5
+  m_Time: 0.5
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
@@ -413,20 +454,29 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -450,7 +500,7 @@ TrailRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
@@ -463,7 +513,7 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_MaskInteraction: 0
   m_Autodestruct: 0
-  m_Emitting: 1
+  m_Emitting: 0
   m_ApplyActiveColorSpace: 1
 --- !u!1 &7949464900817673828
 GameObject:

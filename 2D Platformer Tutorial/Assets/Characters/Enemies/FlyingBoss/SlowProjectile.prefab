@@ -278,3 +278,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   force: 20
   maxBounces: 7
+  destroyOnNextBounce: 0

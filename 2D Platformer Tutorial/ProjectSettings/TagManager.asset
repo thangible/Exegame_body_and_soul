@@ -11,6 +11,8 @@ TagManager:
   - Hostile
   - PlayerCrushOne
   - PlayerCrushTwo
+  - Laser
+  - DestroyableObject
   layers:
   - Default
   - TransparentFX

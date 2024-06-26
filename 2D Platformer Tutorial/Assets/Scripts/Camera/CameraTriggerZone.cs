@@ -86,7 +86,7 @@ public class TriggerZone : MonoBehaviour
 
     private IEnumerator EnableWallColliderWithDelay()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.01f); // could add some delay
         if (wallCollider != null)
         {
             wallCollider.enabled = true;

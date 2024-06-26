@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 // based on https://www.youtube.com/watch?v=--u20SaCCow&ab_channel=MoreBBlakeyyy
 public class SlowProjectileScript : MonoBehaviour
 {
+    public static List<SlowProjectileScript> slowProjectiles = new List<SlowProjectileScript>();
+
+
     [SerializeField] public float force = 1f;
     [SerializeField] int maxBounces = 6;
     public bool destroyOnNextBounce = false;
@@ -20,6 +23,7 @@ public class SlowProjectileScript : MonoBehaviour
     private Vector3 direction;
     private TrailRenderer trailRenderer;
 
+    // allow attacking to bounce these projectiles back at the enemy
     private float acceptedHitboxDistance = 2f;
     private float attackMoveTimeframe = 0.3f; // to make it easier to hit the right timing
     private float lastAttackMoveTime;
@@ -57,6 +61,8 @@ public class SlowProjectileScript : MonoBehaviour
         }
 
         timer = 0f;
+
+        slowProjectiles.Add(this);
     }
 
     // Update is called once per frame
@@ -68,10 +74,13 @@ public class SlowProjectileScript : MonoBehaviour
             canCollideWithEnemy = true;
         }
 
+        // replaced by OnPlayerAttackMove 
+        /*
         if (Input.GetMouseButtonDown(0))
         {
             lastAttackMoveTime = Time.time;
         }
+        */
 
         if (player != null && player.activeSelf)
         {
@@ -151,6 +160,30 @@ public class SlowProjectileScript : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    public void OnPlayerAttackMove()
+    {
+        lastAttackMoveTime = Time.time;
+    }
+
+
+    private void OnDestroy()
+    {
+        slowProjectiles.Remove(this);
+    }
+
+    public static void DestroyAllProjectiles()
+    {
+        foreach (var projectile in slowProjectiles.ToArray())
+        {
+            if (projectile != null)
+            {
+                Destroy(projectile.gameObject);
+            }
+        }
+        slowProjectiles.Clear();
     }
 
 }

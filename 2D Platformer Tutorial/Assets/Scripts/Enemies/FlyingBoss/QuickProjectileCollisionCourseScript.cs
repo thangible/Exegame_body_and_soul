@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class QuickProjectileCollisionCourseScript : MonoBehaviour
 {
+    public static List<QuickProjectileCollisionCourseScript> quickCollisionCourseProjectiles = new List<QuickProjectileCollisionCourseScript>();
+
 
     [SerializeField] public float force = 15f;
     //[SerializeField] float rotationSpeed = 5f;
@@ -18,6 +20,7 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
     private Collider2D coll;
     private Vector3 direction;
 
+    // allow blocking (same as attacking for the slow projectile)
     private float acceptedHitboxDistance = 2f;
     private float blockMoveTimeframe = 0.4f; // to make it easier to block with the right timing
     private float lastBlockMoveTime;
@@ -45,22 +48,28 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
         }
 
         timer = 0f;
+
+        quickCollisionCourseProjectiles.Add(this);
     }
 
     // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
+
         if (!canCollideWithEnemy && timer >= 0.5f)
         {
             canCollideWithEnemy = true;
             coll.enabled = true;
         }
 
+        // replaced by OnPlayerAttackMove 
+        /*
         if (Input.GetMouseButtonDown(0))
         {
             lastBlockMoveTime = Time.time;
         }
+        */
 
         if (player != null && player.activeSelf)
         {
@@ -109,6 +118,32 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+
+
+    public void OnPlayerAttackMove()
+    {
+        lastBlockMoveTime = Time.time;
+    }
+
+
+
+    private void OnDestroy()
+    {
+        quickCollisionCourseProjectiles.Remove(this);
+    }
+
+    public static void DestroyAllProjectiles()
+    {
+        foreach (var projectile in quickCollisionCourseProjectiles.ToArray())
+        {
+            if (projectile != null)
+            {
+                Destroy(projectile.gameObject);
+            }
+        }
+        quickCollisionCourseProjectiles.Clear();
     }
 
 }

@@ -43,10 +43,9 @@ public class FlyingBoss : MonoBehaviour
     private bool routine3Active = false;
     private int[] routine3Pattern = new int[25];
     private bool routine4Active = false;
-    private int[] routine4Pattern = new int[10];
+    private int[] routine4Pattern = new int[12];
 
     private int lastRoutine = 0;
-    private bool isQuickAttackMovementPhaseActive = true;
     private float quickAttackElapsedTime = 0f;
     private bool quickAttackStateStarted = false;
     private bool quickAttackStateFinished = false;
@@ -59,6 +58,11 @@ public class FlyingBoss : MonoBehaviour
     private float slowAttackElapsedTime = 0f;
     private bool slowAttackStateStarted = false;
     private bool slowAttackStateFinished = false;
+
+
+    [Header("MoveWithoutAttackingPlayer")]
+    private bool moveWithoutAttackingPlayerStateStarted = false;
+    private bool moveWithoutAttackingPlayerStateFinished = false;
 
     [Header("AttackPlayer")]
     [SerializeField] float attackPlayerSpeed = 50f;
@@ -146,7 +150,7 @@ public class FlyingBoss : MonoBehaviour
 
         for (int i = 0; i < routine4Pattern.Length; i++)
         {
-            if (i <= 5)
+            if (i <= 7)
             {
                 routine4Pattern[i] = Random.Range(10, 50);
             } else
@@ -175,20 +179,24 @@ public class FlyingBoss : MonoBehaviour
             // (not equal to the idle state/animation --> TODO ideally we would resolve this in the animator, to always play the idle even while other animations are active)
             IdleMovement();
 
-            // Phase One
-            if ((!quickAttackStateFinished && !attackPlayerStateFinished) && !pickedPhaseOne)
+            // Phase One (movement)
+            if ((!moveWithoutAttackingPlayerStateFinished && !attackPlayerStateFinished) && !pickedPhaseOne)
             {
-                RandomStatePicker(AnimationStrings.flyingBoss_quickRangedAttack, AnimationStrings.flyingBoss_attackPlayer);
+                RandomStatePicker(AnimationStrings.flyingBoss_moveWithoutAttackingPlayer, AnimationStrings.flyingBoss_attackPlayer);
                 pickedPhaseOne = true;
 
                 // enable this attack
                 hitPlayerInProximityStateFinished = false;
             }
 
-            // Phase Two
-            if ((quickAttackStateFinished || attackPlayerStateFinished) && pickedPhaseOne)
+            // Phase Two (shooting from corner)
+            if ((moveWithoutAttackingPlayerStateFinished || attackPlayerStateFinished) && pickedPhaseOne)
             {
-                if (!slowAttackStateFinished && !pickedPhaseTwo)
+                if (!quickAttackStateFinished && !slowAttackStateFinished && !pickedPhaseTwo)
+                {
+                    enemyAnimator.SetBool(AnimationStrings.flyingBoss_quickRangedAttack, true);
+                }
+                else if (quickAttackStateFinished && !slowAttackStateFinished && !pickedPhaseTwo)
                 {
                     enemyAnimator.SetBool(AnimationStrings.flyingBoss_slowRangedAttack, true);
                     pickedPhaseTwo = true;
@@ -203,6 +211,7 @@ public class FlyingBoss : MonoBehaviour
                     projectileTimer = 0f;
                     projectilesFired = 0;
 
+                    moveWithoutAttackingPlayerStateFinished = false;
                     attackPlayerStateFinished = false;
                     quickAttackStateFinished = false;
                     slowAttackStateFinished = false;
@@ -221,6 +230,12 @@ public class FlyingBoss : MonoBehaviour
                     {
                         isPlayerInRange = true;
                         enemyAnimator.SetBool(AnimationStrings.flyingBoss_hitPlayerInProximity, true);
+
+                        // make sure to reset this in case this attack is disabled (otherwise this animation could be triggered in a new cycle/rotation of attacks
+                        if (hitPlayerInProximityStateFinished)
+                        {
+                            enemyAnimator.SetBool(AnimationStrings.flyingBoss_hitPlayerInProximity, false);
+                        }
                     }
                 }
             }
@@ -452,9 +467,9 @@ public class FlyingBoss : MonoBehaviour
 
     public void SlowRangedAttackState()
     {
-        if (player != null && player.activeSelf)
+        if (!slowAttackStateFinished)
         {
-            if (!slowAttackStateFinished)
+            if (player != null && player.activeSelf)
             {
                 if (!slowAttackStateStarted)
                 {
@@ -527,36 +542,8 @@ public class FlyingBoss : MonoBehaviour
                     quickAttackStateStarted = true;
                 }
 
-                // First execute the movement phase
-                if (isQuickAttackMovementPhaseActive && timer >= 0.5f) // some delay
+                if (timer >= 0.1f) // some delay
                 {
-                    if (!hasMovedSides)
-                    {
-                        MoveToOtherSide();
-
-                        if (isFacingLeft)
-                        {
-                            float angle = shootDownwardsAngle;
-                            ShootWhileMoving(angle);
-                        }
-                        else
-                        {
-                            enemyAnimator.SetTrigger(AnimationStrings.flyingBoss_quickRangedAttackReturnMovement);
-                            float angle = -shootDownwardsAngle;
-                            ShootWhileMoving(angle);
-                        }
-                    }
-                    else
-                    {
-                        isQuickAttackMovementPhaseActive = false;
-                        isMovingOnX = false;
-                    }
-
-                } 
-                else if (!isQuickAttackMovementPhaseActive) // Then switch to the variation phase with its routines
-                {
-                    enemyAnimator.SetTrigger(AnimationStrings.flyingBoss_quickRangedAttackIdleMovement);
-
                     quickAttackElapsedTime += Time.deltaTime;
 
                     if (quickAttackElapsedTime < quickAttackVariationPhaseDuration)
@@ -612,6 +599,9 @@ public class FlyingBoss : MonoBehaviour
                             if (routine4Active)
                             {
                                 projectileTimer = -0.75f;
+                            } else if (routine2Active)
+                            {
+                                projectileTimer = -0.5f;
                             }
                         }
 
@@ -630,7 +620,6 @@ public class FlyingBoss : MonoBehaviour
                         routine3Active = false;
                         routine4Active = false;
                         lastRoutine = 0;
-                        isQuickAttackMovementPhaseActive = true;
 
                         timer = 0f;
                         projectileTimer = 0f;
@@ -824,7 +813,6 @@ public class FlyingBoss : MonoBehaviour
     }
 
 
-
     void MoveToOtherSide()
     {
         if (bossArea != null)
@@ -895,6 +883,60 @@ public class FlyingBoss : MonoBehaviour
         }
     }
 
+
+
+    public void MoveWithoutAttackingPlayerState()
+    {
+        if (player != null && player.activeSelf)
+        {
+            if (!moveWithoutAttackingPlayerStateFinished)
+            {
+                if (!moveWithoutAttackingPlayerStateStarted)
+                {
+                    projectilesFired = 0;
+                    timer = 0f;
+                    projectileTimer = 0;
+                    moveWithoutAttackingPlayerStateStarted = true;
+                }
+
+                if (timer >= 0.01f) // some delay
+                {
+                    if (!hasMovedSides)
+                    {
+                        MoveToOtherSide();
+
+                        if (isFacingLeft)
+                        {
+                            float angle = shootDownwardsAngle;
+                            ShootWhileMoving(angle);
+                        }
+                        else
+                        {
+                            enemyAnimator.SetTrigger(AnimationStrings.flyingBoss_moveWithoutAttackingPlayerReturnMovement);
+                            float angle = -shootDownwardsAngle;
+                            ShootWhileMoving(angle);
+                        }
+                    }
+                    else
+                    {
+                        hasMovedSides = false;
+                        isMovingOnX = false;
+
+                        timer = 0f;
+                        projectileTimer = 0f;
+                        projectilesFired = 0;
+
+                        moveWithoutAttackingPlayerStateFinished = true;
+                        moveWithoutAttackingPlayerStateStarted = false;
+
+                        enemyAnimator.ResetTrigger(AnimationStrings.flyingBoss_moveWithoutAttackingPlayerReturnMovement);
+                        enemyAnimator.SetBool(AnimationStrings.flyingBoss_moveWithoutAttackingPlayer, false);
+                    }
+
+                }
+            }
+        }
+    }
 
 
     public void AttackPlayerState()
@@ -1015,6 +1057,8 @@ public class FlyingBoss : MonoBehaviour
                     attackPlayerStateFinished = true;
                     attackPlayerStateStarted = false;
 
+                    enemyAnimator.ResetTrigger(AnimationStrings.flyingBoss_attackPlayerDashMovement);
+                    enemyAnimator.ResetTrigger(AnimationStrings.flyingBoss_attackPlayerReturnMovement);
                     enemyAnimator.SetBool(AnimationStrings.flyingBoss_attackPlayer, false);
                 }
                 else
@@ -1025,6 +1069,8 @@ public class FlyingBoss : MonoBehaviour
             }
         }
     }
+
+
 
     public void HitPlayerInProximityState()
     {
@@ -1117,6 +1163,7 @@ public class FlyingBoss : MonoBehaviour
                     hitPlayerInProximityStateFinished = false; // TODO remove?
                     hitPlayerInProximityStateStarted = false;
 
+                    enemyAnimator.ResetTrigger(AnimationStrings.flyingBoss_hitPlayerInProximityReturnMovement);
                     enemyAnimator.SetBool(AnimationStrings.flyingBoss_hitPlayerInProximity, false);
                 }
                 else
@@ -1170,6 +1217,7 @@ public class FlyingBoss : MonoBehaviour
 
             if (vcamCurrent != null)
             {
+                vcamCurrent.Follow = player.transform;
                 CinemachineFramingTransposer transposer = vcamCurrent.GetCinemachineComponent<CinemachineFramingTransposer>();
 
                 if (transposer != null)
@@ -1184,6 +1232,7 @@ public class FlyingBoss : MonoBehaviour
                     transposer.m_SoftZoneHeight = 0.5f;
                 }
             }
+
         }
     }
 

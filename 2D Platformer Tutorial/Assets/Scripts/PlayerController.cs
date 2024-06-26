@@ -4,25 +4,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// Based on https://www.youtube.com/watch?v=oxiPWg8cdRM&ab_channel=Chris%27Tutorials
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Speed")]
     public float walkSpeed = 5f;
     public float runSpeed = 8f;
     public float airWalkSpeed = 7f;
 
+    [Header("Jump")]
     public float jumpImpulse = 8f;
     public int jumpCounter = 0;
+    private bool canWallJump = true;
 
+    public float fallDamageThreshold = 15f; // falling speed threshhold; not distance
+    private bool playerDiesFromFallDamage = false;
+    private bool canTakeFallDamage = true;
+
+    [Header("Dash")]
     private bool canDash = true;
     public float dashingImpulse = 24f;
     private float dashingTime = 0.2f;
     private float dashingCooldown = 1f;
 
+    [Header("Attack")]
+    public float attackRange = 2; // 0.6f;
+    public int attackDamage = 1;
+    public float attackCooldown = 0.6f;
+    public string destroyableTag = "DestroyableObject";
+    private bool canAttack = true;
+
+
     Vector2 moveInput;
     TouchingDirections touchingDirections;
 
-    //private static bool isPlayerAlive = true;
+    private PuzzlePlatform[] puzzlePlatforms;
+
+    private float puzzle_airWalkSpeed;
+    private float puzzle_jumpImpulse;
+    private float original_airWalkSpeed;
+    private float original_jumpImpulse;
 
     //private GameObject currentOneWayPlatform;
     //private float secondsToFallThroughPlatform = 0.25f;
@@ -30,30 +52,45 @@ public class PlayerController : MonoBehaviour
 
     public float CurrentMoveSpeed { get
         {
-            if (IsMoving && !touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling) // already added isOnCeiling
+            if(CanMove) // can restrict movement here with: CanMove
             {
-                if (touchingDirections.IsGrounded)
+                if (IsMoving && !touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling) // already added isOnCeiling
                 {
-                    if (IsRunning)
+                    if (touchingDirections.IsGrounded)
                     {
-                        return runSpeed;
-                    }
-                    else
+                        if (IsRunning)
+                        {
+                            return runSpeed;
+                        }
+                        else
+                        {
+                            return walkSpeed;
+                        }
+                    } else
                     {
-                        return walkSpeed;
+                        // Air move
+                        return airWalkSpeed;
                     }
-                } else
-                {
-                    // Air move
-                    return airWalkSpeed;
                 }
-            }
+                else
+                {
+                    return 0; // idle
+                }
 
+            }
             else
             {
-                return 0; // idle
+                return 0; // movement locked (when attacking)
             }
 
+        }
+    }
+
+    public bool CanMove
+    {
+        get
+        {
+            return animator.GetBool(AnimationStrings.canMove);
         }
     }
 
@@ -118,6 +155,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private bool _isFalling = false;
+    public bool IsFalling
+    {
+        get
+        {
+            return _isFalling;
+        }
+        private set
+        {
+            _isFalling = value;
+            //animator.SetBool(AnimationStrings.yVelocity, value); // handled differently
+        }
+    }
+
 
     Rigidbody2D rb;
     [SerializeField] private CapsuleCollider2D playerCollider;
@@ -131,8 +183,16 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // newly added because of the dash, was discrete before
         animator = GetComponent<Animator>();
         touchingDirections = GetComponent<TouchingDirections>();
+
+        puzzlePlatforms = FindObjectsOfType<PuzzlePlatform>();
+
+        puzzle_airWalkSpeed = airWalkSpeed / 2;
+        puzzle_jumpImpulse = jumpImpulse / 1.4f;
+        original_airWalkSpeed = airWalkSpeed;
+        original_jumpImpulse = jumpImpulse;
     }
 
     // Start is called before the first frame update
@@ -156,7 +216,7 @@ public class PlayerController : MonoBehaviour
             jumpCounter = 0;
         }
 
-        FallThroughPlatform();
+        //FallThroughPlatform(); // TODO re-activate ?
     }
 
     private void FixedUpdate()
@@ -167,9 +227,30 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+
+        // track falling state
         rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y); // * Time.fixedDeltaTime already handled by RigitBody
-        
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+
+        // apply fall damage
+        IsFalling = rb.velocity.y < 0 && !touchingDirections.IsGrounded;
+        if (IsFalling)
+        {
+            // check the speed threshold
+            if (Mathf.Abs(rb.velocity.y) > fallDamageThreshold && canTakeFallDamage)
+            {
+                playerDiesFromFallDamage = true;
+                canDash = false; // disable dash
+            }
+        }
+
+        if (touchingDirections.IsGrounded && playerDiesFromFallDamage)
+        {
+            RespawnController.instance.AnnouncePlayerDeath();
+            canDash = true;
+            playerDiesFromFallDamage = false;
+        }
+
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -215,65 +296,127 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        // TODO check if alive as well
-
-        // Count jumps
-        if (context.started)
+        if (true) // can restrict movement here with: CanMove
         {
-            jumpCounter += 1;
-        }
+            // Count jumps
+            if (context.started)
+            {
+                jumpCounter += 1;
 
-        // Normal jump
-        if (context.started && touchingDirections.IsGrounded)
-        {
-            animator.SetTrigger(AnimationStrings.jump);
-            rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+                // switch "puzzle" platforms on jump for all found PuzzlePlatform instances
+                foreach (PuzzlePlatform puzzlePlatform in puzzlePlatforms)
+                {
+                    if (touchingDirections.IsGrounded)
+                    {
+                        puzzlePlatform.SwitchPlatforms();
+                    }
+                }
 
-        // Double jump when on wall
-        } else if (context.started && touchingDirections.IsOnWall)
-        {
-            float originalGravity = rb.gravityScale;
+            }
 
-            //if (jumpCounter <= 1)
+            // Normal jump
+            if (context.started && touchingDirections.IsGrounded)
             {
                 animator.SetTrigger(AnimationStrings.jump);
                 rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
 
-               // increase gravity at peak of jump curve
-               if(rb.velocity.y < 0)
+                // Double jump when on wall
+            }
+            else if (context.started && touchingDirections.IsOnWall)
+            {
+                if (canWallJump)
                 {
-                    rb.gravityScale = originalGravity * 1.5f;
+                    //PerformWallJump(); // TODO re-activate Wall jump ?
                 }
             }
+
+
+            // Tapping for little jumps
+            if (context.canceled && rb.velocity.y > 0f)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            }
         }
-
-
-        // Tapping for little jumps
-        if (context.canceled && rb.velocity.y > 0f)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-        }
-
     }
 
+    // Wall jump
+    private void PerformWallJump()
+    {
+        float originalGravity = rb.gravityScale;
+
+        //if (jumpCounter <= 1)
+        {
+            animator.SetTrigger(AnimationStrings.jump);
+            rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+
+            // increase gravity at peak of jump curve
+            if (rb.velocity.y < 0)
+            {
+                rb.gravityScale = originalGravity * 1.5f;
+            }
+        }
+    }
 
     // Implement a dash
     private IEnumerator Dash()
     {
+        bool wasInterrupted = false;
+
         canDash = false;
         IsDashing = true;
 
         float originalGravity = rb.gravityScale;
         rb.gravityScale = 0f;
-        rb.velocity = new Vector2(transform.localScale.x * dashingImpulse, 0);
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // do not allow dashing through any obstacles
+
+        Vector2 dashVelocity = new Vector2(transform.localScale.x * dashingImpulse, 0); // y velocity is 0
+        //Vector2 dashDirection = new Vector2(transform.localScale.x, 0).normalized;
+        //float dashDistance = dashingImpulse * dashingTime;
+        int layerMask = LayerMask.GetMask("Ground"); // "Default",  removed
+
         trailRenderer.emitting = true;
-        yield return new WaitForSeconds(dashingTime);
+
+        float dashTimeRemaining = dashingTime;
+        while (dashTimeRemaining > 0)
+        {
+            rb.velocity = dashVelocity;
+
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, dashVelocity.normalized, dashVelocity.magnitude * Time.fixedDeltaTime, layerMask);
+
+            if (hit.collider != null)
+            {
+                // could do more, but not necessary
+                //rb.velocity = Vector2.zero;
+                //rb.position = hit.point;
+                break;
+            }
+
+            yield return new WaitForFixedUpdate();
+            dashTimeRemaining -= Time.fixedDeltaTime;
+
+            // check if dash is interrupted
+            if (!IsDashing)
+            {
+                wasInterrupted = true;
+                break;
+            }
+        }
+        //rb.velocity = new Vector2(transform.localScale.x * dashingImpulse, 0); // y velocity is 0
+        //yield return new WaitForSeconds(dashingTime);
 
         trailRenderer.emitting = false;
         rb.gravityScale = originalGravity;
+        //rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete; // set back
         IsDashing = false;
         yield return new WaitForSeconds(dashingCooldown);
-        canDash = true;
+
+        if (wasInterrupted)
+        {
+            canDash = false;
+        } else
+        {
+            canDash = true;
+        }
     }
 
     public void OnDash(InputAction.CallbackContext context)
@@ -281,6 +424,74 @@ public class PlayerController : MonoBehaviour
         if (context.started && canDash)
         {
             StartCoroutine(Dash());
+        }
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.started && canAttack)
+        {
+            animator.SetTrigger(AnimationStrings.attack);
+            StartCoroutine(Attack());
+        }
+    }
+
+    private IEnumerator Attack()
+    {
+        canAttack = false;
+
+        Vector2 attackDirection = IsFacingRight ? Vector2.right : Vector2.left;
+        Vector2 attackPosition = (Vector2)transform.position + attackDirection * attackRange;
+        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPosition, attackRange);
+
+        // Damage or destroy them if they have the destroyableTag
+        foreach (Collider2D hit in hitObjects)
+        {
+            // fetch object to remove hp
+
+            DestroyableObject destroyableObject = hit.GetComponent<DestroyableObject>();
+            if (destroyableObject != null)
+            {
+                // check if the object is even close --> only look at x (because the attack range is by default very large for the projectiles; in this case only x matters)
+                float distance = Mathf.Abs(transform.position.x - destroyableObject.transform.position.x);
+                if (distance <= attackRange)
+                {
+                    destroyableObject.TakeDamage(attackDamage);
+                }
+            }
+
+            // handle projectiles
+            AttackBossProjectiles(hit);
+
+            // alternatively just destroy in one hit
+            if (hit.CompareTag(destroyableTag))
+            {
+                Destroy(hit.gameObject);
+            }
+        }
+
+        yield return new WaitForSeconds(attackCooldown);
+        canAttack = true;
+    }
+
+    private void AttackBossProjectiles(Collider2D hit)
+    {
+        QuickProjectileScript quickProjectile = hit.GetComponent<QuickProjectileScript>();
+        if (quickProjectile != null)
+        {
+            quickProjectile.OnPlayerAttackMove();
+        }
+
+        QuickProjectileCollisionCourseScript quickProjectileCollisionCourseScript = hit.GetComponent<QuickProjectileCollisionCourseScript>();
+        if (quickProjectileCollisionCourseScript != null)
+        {
+            quickProjectileCollisionCourseScript.OnPlayerAttackMove();
+        }
+
+        SlowProjectileScript slowProjectileScript = hit.GetComponent<SlowProjectileScript>();
+        if (slowProjectileScript != null)
+        {
+            slowProjectileScript.OnPlayerAttackMove();
         }
     }
 
@@ -306,22 +517,6 @@ public class PlayerController : MonoBehaviour
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer(playerLayerName), LayerMask.NameToLayer(oneWayPlatformLayerName), false);
         }
     }
-
-    /* old
-    public void OnFallThroughPlatform(InputAction.CallbackContext context, Collision2D collision)
-    {
-        currentOneWayPlatform = collision.gameObject;
-
-        if (context.started)
-        {
-            if(currentOneWayPlatform != null)
-            {
-                //StartCoroutine(FallThroughPlatform());
-            }
-        }
-
-        currentOneWayPlatform = null;
-    } */
 
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -355,16 +550,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /*
-    public static void AnnouncePlayerDeath(bool isPlayerDead = true)
+
+
+    public void PrepareForPuzzleSection()
     {
-        isPlayerAlive = !isPlayerDead;
+        // interrupt dash
+        IsDashing = false;
+
+        canWallJump = false;
+        canDash = false;
+        canTakeFallDamage = false;
+
+        airWalkSpeed = puzzle_airWalkSpeed;
+        jumpImpulse = puzzle_jumpImpulse;
     }
 
-    public static bool IsPlayerAlive()
+    public void ResetAfterPuzzleSection()
     {
-        return isPlayerAlive;
-    } 
-    */
+        canWallJump = true;
+        canDash = true;
+        canTakeFallDamage = true;
+
+        airWalkSpeed = original_airWalkSpeed;
+        jumpImpulse = original_jumpImpulse;
+    }
 
 }

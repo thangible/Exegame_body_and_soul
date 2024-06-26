@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class QuickProjectileScript : MonoBehaviour
 {
+    public static List<QuickProjectileScript> quickProjectiles = new List<QuickProjectileScript>();
+    private static bool isBlockAvailable = true;
+
+
     public enum ProjectileType
     {
         FocusPlayer,
@@ -26,6 +30,7 @@ public class QuickProjectileScript : MonoBehaviour
     private Collider2D coll;
     private Vector3 direction;
 
+    // allow blocking (same as attacking for the slow projectile)
     private float acceptedHitboxDistance = 2f;
     private float blockMoveTimeframe = 0.3f; // to make it easier to block with the right timing
     private float lastBlockMoveTime;
@@ -44,7 +49,7 @@ public class QuickProjectileScript : MonoBehaviour
 
         if (player != null && player.activeSelf)
         {
-            //playerInput = player.GetComponent<PlayerInput>();
+            playerInput = player.GetComponent<PlayerInput>();
             enemy = GameObject.FindGameObjectWithTag("FlyingBoss");
             enemyScript = enemy.GetComponent<FlyingBoss>();
 
@@ -70,22 +75,27 @@ public class QuickProjectileScript : MonoBehaviour
         }
 
         timer = 0f;
+
+        quickProjectiles.Add(this);
     }
 
     // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
+
         if (!canCollideWithEnemy && timer >= 0.5f)
         {
             canCollideWithEnemy = true;
             coll.enabled = true;
         }
 
+        // replaced by OnPlayerAttackMove 
+        /*
         if (Input.GetMouseButtonDown(0))
         {
             lastBlockMoveTime = Time.time;
-        }
+        }*/
 
         if (player != null && player.activeSelf)
         {
@@ -93,13 +103,16 @@ public class QuickProjectileScript : MonoBehaviour
             if ((Vector2.Distance(transform.position, player.transform.position) <= acceptedHitboxDistance))
             {
                 // button pressed in the last time
-                if (Time.time - lastBlockMoveTime <= blockMoveTimeframe)
+                if (Time.time - lastBlockMoveTime <= blockMoveTimeframe && isBlockAvailable)
                 {
                     Destroy(gameObject);
+
+                    isBlockAvailable = false;
+                    MakeBlockAvailable();
                 }
             }
         }
-        
+
         // continuous rotation (buggy)
         //transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
     }
@@ -117,6 +130,36 @@ public class QuickProjectileScript : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+
+    public void OnPlayerAttackMove()
+    {
+        lastBlockMoveTime = Time.time;
+    }
+
+
+    private void OnDestroy()
+    {
+        quickProjectiles.Remove(this);
+    }
+
+    public static void DestroyAllProjectiles()
+    {
+        foreach (var projectile in quickProjectiles.ToArray())
+        {
+            if (projectile != null)
+            {
+                Destroy(projectile.gameObject);
+            }
+        }
+        quickProjectiles.Clear();
+    }
+
+    private static IEnumerator MakeBlockAvailable()
+    {
+        yield return new WaitForSeconds(0.5f); // not relevant anymore, since the attack move from the player has its own cooldown
+        isBlockAvailable = true;
     }
 
 }

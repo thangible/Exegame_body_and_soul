@@ -11,21 +11,26 @@ public class RespawnController : MonoBehaviour
     [SerializeField] public Transform respawnPoint;
 
     public bool isPlayerAlive;
+    private bool hasRecentlyDied; // otherwise some objects do not get instantiated (player respawns too quickly for that)
+    private float recentlyDiedDuration = 1f;
+
+    // introduce lock to isPlayerAlive
+    private readonly object playerAliveLock = new object(); // TODO keep or move?
 
 
     private void Awake()
     {
         isPlayerAlive = true;
+        hasRecentlyDied = false;
         instance = this;
     }
 
     void Update()
     {
         // handle player death
-        if (!RespawnController.instance.isPlayerAlive)
+        if (!isPlayerAlive)
         {
-            RespawnController.instance.RespawnPlayer();
-            RespawnController.instance.isPlayerAlive = true;
+            RespawnPlayer();
         }
     }
 
@@ -44,12 +49,15 @@ public class RespawnController : MonoBehaviour
 
             // also (re)activate player
             player.SetActive(true);
+
+            // mark player as alive
+            SetPlayerAlive(true);
         }
     }
 
     public void ChangeRespawnPoint(Transform newRespawnPoint)
     {
-        RespawnController.instance.respawnPoint = newRespawnPoint;
+        respawnPoint = newRespawnPoint;
     }
 
     public static void DestroyInstance()
@@ -64,11 +72,55 @@ public class RespawnController : MonoBehaviour
     public void AnnouncePlayerDeath(bool isPlayerDead = true)
     {
         isPlayerAlive = !isPlayerDead;
+
+        if (isPlayerDead)
+        {
+            StartCoroutine(SetHasDiedRecently());
+        }
     }
 
+    private IEnumerator SetHasDiedRecently()
+    {
+        lock (playerAliveLock)
+        {
+            hasRecentlyDied = true;
+        }
+        yield return new WaitForSeconds(recentlyDiedDuration);
+        lock (playerAliveLock)
+        {
+            hasRecentlyDied = false;
+        }
+    }
+
+    public bool HasDiedRecently()
+    {
+        lock (playerAliveLock)
+        {
+            return hasRecentlyDied;
+        }
+    }
+
+    // preferably use hasRecentlyDied to check this
+    public bool IsPlayerAlive()
+    {
+        lock (playerAliveLock)
+        {
+            return isPlayerAlive;
+        }
+    }
+
+    private void SetPlayerAlive(bool alive)
+    {
+        lock (playerAliveLock)
+        {
+            isPlayerAlive = alive;
+        }
+    }
+
+    /* old without lock
     public bool IsPlayerAlive()
     {
         return isPlayerAlive;
-    }
+    } */
 
 }

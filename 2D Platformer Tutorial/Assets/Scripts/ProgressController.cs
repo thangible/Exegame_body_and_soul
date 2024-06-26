@@ -8,9 +8,13 @@ public class ProgressController : MonoBehaviour
     public static ProgressController instance;
 
 
-    // Level 3
+    // Level 2
+    public bool hasSolvedPuzzle = false;
+
+    public bool hasOvercomeFirstFallingPlatforms = false;
+    public bool hasOvercomeLastFallingPlatforms = false;
+
     public bool hasDefeatedFlyingEnemy = false;
-    public bool hasOvercomeFallingPlatforms = false;
 
 
     private void Awake()
@@ -18,10 +22,33 @@ public class ProgressController : MonoBehaviour
         instance = this;
     }
 
+    public void SetHasSolvedPuzzle()
+    {
+        hasSolvedPuzzle = true;
+    }
+
+    public bool HasSolvedPuzzle()
+    {
+        return hasSolvedPuzzle;
+    }
+
+    public void SetOvercameFirstFallingFlatforms()
+    {
+        hasOvercomeFirstFallingPlatforms = true;
+    }
+
+    public bool HasOvercomeFirstFallingPlatforms()
+    {
+        return hasOvercomeFirstFallingPlatforms;
+    }
+
 
     public void SetFlyingEnemyDefeated()
     {
         hasDefeatedFlyingEnemy = true;
+
+        // on boss defeat, destroy remaining slow projectiles
+        SlowProjectileScript.DestroyAllProjectiles();
     }
 
     public bool HasDefeatedFlyingEnemy()
@@ -30,14 +57,14 @@ public class ProgressController : MonoBehaviour
     }
 
 
-    public void SetOvercameFallingFlatforms()
+    public void SetOvercameLastFallingFlatforms()
     {
-        hasOvercomeFallingPlatforms = true;
+        hasOvercomeLastFallingPlatforms = true;
     }
 
-    public bool HasOvercomeFallingPlatforms()
+    public bool HasOvercomeLastFallingPlatforms()
     {
-        return hasOvercomeFallingPlatforms;
+        return hasOvercomeLastFallingPlatforms;
     }
 
 }

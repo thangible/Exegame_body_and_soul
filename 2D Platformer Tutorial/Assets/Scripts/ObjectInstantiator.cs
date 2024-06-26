@@ -7,6 +7,8 @@ public class ObjectInstantiator : MonoBehaviour
     private GameObject currentObject;
 
     public bool isPrefab = true;
+    public bool instantiateByDefault = true;
+    private bool nonDefaultInstantiationComplete = false;
     public string objectTag = ""; // in case its not a prefab, destroy all other objects with this tag
 
 
@@ -17,35 +19,93 @@ public class ObjectInstantiator : MonoBehaviour
             DestroyOtherInstancesWithTag();
         }
 
-        InstantiateNewObject();
+        if (instantiateByDefault)
+        {
+            InstantiateNewObject();
+        }
     }
 
     void Update()
     {
-        
-        // if the player is not alive, destroy the current object and instantiate a new one
-        if (!RespawnController.instance.IsPlayerAlive())
+        // handle objects that have not been instantiated by default
+        if (!nonDefaultInstantiationComplete)
+        {
+            // puzzle finished barrier
+            if (objectTag == "PuzzleFinishedBarrier" && ProgressController.instance.HasSolvedPuzzle())
+            {
+                InstantiateNewObject();
+                nonDefaultInstantiationComplete = true;
+            }
+        }
+
+
+        if (RespawnController.instance.HasDiedRecently())
+        {
+            HandlePlayerDeath();
+
+            // on player death, destroy remaining projectiles
+            if (objectTag == "FlyingBoss")
+            {
+                SlowProjectileScript.DestroyAllProjectiles();
+                QuickProjectileScript.DestroyAllProjectiles();
+                QuickProjectileCollisionCourseScript.DestroyAllProjectiles();
+            }
+        }
+
+        // in special cases, destroy the object forever
+        if (objectTag == "FlyingBossBarrier" && ProgressController.instance.HasDefeatedFlyingEnemy())
         {
             if (currentObject != null)
             {
                 Destroy(currentObject);
             }
-
-            // special case for FlyingBoss
-            if (objectTag == "FlyingBoss" && ProgressController.instance.HasDefeatedFlyingEnemy())
-            {
-                // dont spawn a new flying enemy
-            } 
-            // special case for Falling Platforms
-            else if (objectTag == "FallingPlatform" && ProgressController.instance.HasOvercomeFallingPlatforms())
-            {
-                // dont spawn new Falling Platforms
-            }
-            else
-            {
-                InstantiateNewObject();
-            }
         }
+    }
+
+    void HandlePlayerDeath()
+    {
+        // if the player is not alive, destroy the current object and instantiate a new one
+        if (currentObject != null)
+        {
+            Destroy(currentObject);
+        }
+
+        if (!ShouldObjectRespawn())
+        {
+            return;
+        }
+
+        InstantiateNewObject();
+    }
+
+    bool ShouldObjectRespawn()
+    {
+        if (objectTag == "FlyingBoss" && ProgressController.instance.HasDefeatedFlyingEnemy())
+        {
+            // dont spawn a new flying enemy
+            return false;
+        }
+        else if (objectTag == "FlyingBossBarrier" && ProgressController.instance.HasDefeatedFlyingEnemy())
+        {
+            // dont spawn new Flying Boss Barrier (barrier behind boss)
+            return false;
+        }
+        else if (objectTag == "FirstFallingPlatforms" && ProgressController.instance.HasOvercomeFirstFallingPlatforms())
+        {
+            // dont spawn new Falling Platforms
+            return false;
+        }
+        else if (objectTag == "LastFallingPlatforms" && ProgressController.instance.HasOvercomeLastFallingPlatforms())
+        {
+            // dont spawn new Falling Platforms
+            return false;
+        }
+        else if (objectTag == "PuzzleFinishedBarrier" && !ProgressController.instance.HasSolvedPuzzle())
+        {
+            // dont spawn new puzzle finished barrier
+            return false;
+        }
+        return true;
     }
 
     void InstantiateNewObject()

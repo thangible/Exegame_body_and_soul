@@ -47,9 +47,9 @@ public class MovingPlatform : MonoBehaviour
     private BoxCollider2D platformCollider;
     private BoxCollider2D counterpartCollider;
 
+    public float collisionCooldown = 0.5f;
     private bool collison = false;
     private bool collisionOnCooldown = false;
-    private float collisionCooldown = 0.5f;
     private float collisionOnCooldownTimer;
 
     private float delayTimer = 0.0f;
@@ -162,6 +162,7 @@ public class MovingPlatform : MonoBehaviour
                 {
                     collison = true;
                     collisionOnCooldown = true;
+                    Physics2D.IgnoreCollision(platformCollider, counterpartCollider);
                 }
             }
         }
@@ -199,6 +200,7 @@ public class MovingPlatform : MonoBehaviour
             {
                 collisionOnCooldown = false;
                 collisionOnCooldownTimer = collisionCooldown;
+                Physics2D.IgnoreCollision(platformCollider, counterpartCollider, false);
             }
         }
     }
