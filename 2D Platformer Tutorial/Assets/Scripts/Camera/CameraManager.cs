@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System.Collections;
+using UnityEditor.Rendering.LookDev;
+using Unity.VisualScripting;
 
 // Switching between multiple cameras (https://www.youtube.com/watch?v=wmTCWMcjIzo) --> place on main camera
 public class CameraManager : MonoBehaviour
@@ -19,12 +22,14 @@ public class CameraManager : MonoBehaviour
 
     public static void SwitchCamera(CinemachineVirtualCamera newCamera)
     {
-        newCamera.Priority = 10;
-        ActiveCamera = newCamera;
-
         foreach (CinemachineVirtualCamera cam in cameras)
         {
-            if (cam != newCamera)
+            if (cam == newCamera)
+            {
+                cam.Priority = 10;
+                ActiveCamera = newCamera;
+            }
+            else
             {
                 cam.Priority = 0;
             }
@@ -62,6 +67,30 @@ public class CameraManager : MonoBehaviour
             }
         }
     }
+
+    public static void SwitchCameraStyle(CinemachineBlendDefinition.Style cameraStyle)
+    {
+        CinemachineBrain cinemachineBrain = Camera.main.GetComponent<CinemachineBrain>();
+        if (cinemachineBrain != null)
+        {
+            cinemachineBrain.m_DefaultBlend.m_Style = cameraStyle;
+        }
+
+        CoroutineRunner.Instance.StartCoroutine(SwitchBackToDefaultCameraStyle(CinemachineBlendDefinition.Style.EaseInOut));
+    }
+
+    private static IEnumerator SwitchBackToDefaultCameraStyle(CinemachineBlendDefinition.Style cameraStyle)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        CinemachineBrain cinemachineBrain = Camera.main.GetComponent<CinemachineBrain>();
+        if (cinemachineBrain != null)
+        {
+            cinemachineBrain.m_DefaultBlend.m_Style = cameraStyle;
+        }
+    }
+
+
 
     public static void Register(CinemachineVirtualCamera camera)
     {

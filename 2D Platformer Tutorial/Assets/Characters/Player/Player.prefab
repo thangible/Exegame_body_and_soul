@@ -169,14 +169,18 @@ MonoBehaviour:
   walkSpeed: 12
   runSpeed: 16
   airWalkSpeed: 16
+  hostileObjectTag: Hostile
   jumpImpulse: 12
   jumpCounter: 0
   fallDamageThreshold: 15
-  dashingImpulse: 24
+  noFallDamageObjectTag: NoFallDamageObject
+  dashingImpulse: 30
+  dashingDistance: 8
+  dashingCooldown: 1
   attackRange: 2
   attackDamage: 1
   attackCooldown: 0.6
-  destroyableTag: DestroyableObject
+  destroyableObjectTag: DestroyableObject
   _isMoving: 0
   _isRunning: 0
   _isFacingRight: 1

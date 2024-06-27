@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed = 5f;
     public float runSpeed = 8f;
     public float airWalkSpeed = 7f;
-
+    public string hostileObjectTag = "Hostile";
+    
     [Header("Jump")]
     public float jumpImpulse = 8f;
     public int jumpCounter = 0;
@@ -20,19 +21,22 @@ public class PlayerController : MonoBehaviour
 
     public float fallDamageThreshold = 15f; // falling speed threshhold; not distance
     private bool playerDiesFromFallDamage = false;
+    private bool landedOnNoFallDamageObject = false;
     private bool canTakeFallDamage = true;
+    public string noFallDamageObjectTag = "NoFallDamageObject";
 
     [Header("Dash")]
-    private bool canDash = true;
     public float dashingImpulse = 24f;
-    private float dashingTime = 0.2f;
-    private float dashingCooldown = 1f;
+    public float dashingDistance = 12f;
+    public float dashingCooldown = 1f;
+    //private float dashingTime = 0.2f;
+    private bool canDash = true;
 
     [Header("Attack")]
     public float attackRange = 2; // 0.6f;
     public int attackDamage = 1;
     public float attackCooldown = 0.6f;
-    public string destroyableTag = "DestroyableObject";
+    public string destroyableObjectTag = "DestroyableObject";
     private bool canAttack = true;
 
 
@@ -183,7 +187,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // newly added because of the dash, was discrete before
+        //rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // newly added because of the dash, was discrete before
         animator = GetComponent<Animator>();
         touchingDirections = GetComponent<TouchingDirections>();
 
@@ -233,25 +237,54 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
 
         // apply fall damage
+        HandleFallDamage();
+    }
+
+
+    private void HandleFallDamage()
+    {
+        int layerMask = LayerMask.GetMask("Default", "Ground");
+
         IsFalling = rb.velocity.y < 0 && !touchingDirections.IsGrounded;
-        if (IsFalling)
+        if (IsFalling && canTakeFallDamage)
         {
-            // check the speed threshold
-            if (Mathf.Abs(rb.velocity.y) > fallDamageThreshold && canTakeFallDamage)
+            // (almost) seal fate of death when reaching a certain y velocity
+            if (Mathf.Abs(rb.velocity.y) > fallDamageThreshold && !playerDiesFromFallDamage)
             {
-                playerDiesFromFallDamage = true;
                 canDash = false; // disable dash
+                playerDiesFromFallDamage = true;
+                print("will die");
+
+            }
+
+            // check for collisions below the player
+            float distanceToGround = (playerCollider.size.y) + 0.1f;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround, layerMask);
+            //Debug.DrawRay(transform.position, Vector2.down * distanceToGround, Color.red);
+
+            if (hit.collider != null)
+            {
+                if (hit.collider.CompareTag(noFallDamageObjectTag))
+                {
+                    landedOnNoFallDamageObject = true;
+
+                }
             }
         }
 
         if (touchingDirections.IsGrounded && playerDiesFromFallDamage)
         {
-            RespawnController.instance.AnnouncePlayerDeath();
-            canDash = true;
-            playerDiesFromFallDamage = false;
-        }
+            if(!landedOnNoFallDamageObject)
+            {
+                RespawnController.instance.AnnouncePlayerDeath();
+            }
 
+            landedOnNoFallDamageObject = false;
+            playerDiesFromFallDamage = false;
+            canDash = true;
+        }
     }
+
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -357,68 +390,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Implement a dash
-    private IEnumerator Dash()
-    {
-        bool wasInterrupted = false;
-
-        canDash = false;
-        IsDashing = true;
-
-        float originalGravity = rb.gravityScale;
-        rb.gravityScale = 0f;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // do not allow dashing through any obstacles
-
-        Vector2 dashVelocity = new Vector2(transform.localScale.x * dashingImpulse, 0); // y velocity is 0
-        //Vector2 dashDirection = new Vector2(transform.localScale.x, 0).normalized;
-        //float dashDistance = dashingImpulse * dashingTime;
-        int layerMask = LayerMask.GetMask("Ground"); // "Default",  removed
-
-        trailRenderer.emitting = true;
-
-        float dashTimeRemaining = dashingTime;
-        while (dashTimeRemaining > 0)
-        {
-            rb.velocity = dashVelocity;
-
-            RaycastHit2D hit = Physics2D.Raycast(rb.position, dashVelocity.normalized, dashVelocity.magnitude * Time.fixedDeltaTime, layerMask);
-
-            if (hit.collider != null)
-            {
-                // could do more, but not necessary
-                //rb.velocity = Vector2.zero;
-                //rb.position = hit.point;
-                break;
-            }
-
-            yield return new WaitForFixedUpdate();
-            dashTimeRemaining -= Time.fixedDeltaTime;
-
-            // check if dash is interrupted
-            if (!IsDashing)
-            {
-                wasInterrupted = true;
-                break;
-            }
-        }
-        //rb.velocity = new Vector2(transform.localScale.x * dashingImpulse, 0); // y velocity is 0
-        //yield return new WaitForSeconds(dashingTime);
-
-        trailRenderer.emitting = false;
-        rb.gravityScale = originalGravity;
-        //rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete; // set back
-        IsDashing = false;
-        yield return new WaitForSeconds(dashingCooldown);
-
-        if (wasInterrupted)
-        {
-            canDash = false;
-        } else
-        {
-            canDash = true;
-        }
-    }
-
     public void OnDash(InputAction.CallbackContext context)
     {
         if (context.started && canDash)
@@ -426,6 +397,112 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(Dash());
         }
     }
+
+
+    // Implement a dash
+    private IEnumerator Dash()
+    {
+        bool wasInterrupted = false; // interrupted by an external influence
+
+        canDash = false;
+        IsDashing = true;
+
+        float originalGravity = rb.gravityScale;
+        rb.gravityScale = 0f;
+        rb.velocity = Vector2.zero;
+        //rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // do not allow dashing through any obstacles
+        int layerMask = LayerMask.GetMask("Default", "Ground"); // "Default", could be added to detect f.E. triggers
+
+        //Vector2 dashDirection = new Vector2(transform.localScale.x * dashingImpulse, 0);
+        Vector2 dashDirection = new Vector2(transform.localScale.x, 0).normalized; // more constant version
+        Vector2 targetPosition = rb.position + dashDirection * dashingDistance;
+
+        RaycastHit2D[] hits = new RaycastHit2D[10];
+        trailRenderer.emitting = true;
+
+        float burstImpulse = dashingImpulse * 1.5f;
+        float currentImpulse = burstImpulse;
+        bool burstActive = true;
+
+        while (Vector2.Distance(rb.position, targetPosition) > 0.1f)
+        {
+            // raycast to detect any colliders in the path of the dash
+            Vector2 boxSize = new Vector2(dashingDistance / (dashingDistance / 1.5f), (playerCollider.size.y) + 0.1f);
+            int numHits = Physics2D.BoxCastNonAlloc(rb.position, boxSize, 0f, dashDirection, hits, dashingDistance/ (dashingDistance / 1.5f), layerMask);
+
+            //int numHits = Physics2D.RaycastNonAlloc(rb.position, dashDirection.normalized, hits, raycastDistance, layerMask);
+            bool stopDash = false; // stop when hitting ground layer
+
+            if (numHits > 0)
+            {
+                for (int i = 0; i < numHits; i++)
+                {
+                    Collider2D collider = hits[i].collider;
+                    if (collider == null)
+                    {
+                        continue;
+                    }
+
+                    if (collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                    {
+                        stopDash = true;
+                        break;
+                    }
+
+                    // handle other collisions with f.E. triggers
+                    //if (collider.isTrigger)
+                }
+            }
+
+            // hit a ground layer object
+            if (stopDash)
+            {
+                rb.velocity = Vector2.zero;
+                break;
+            }
+
+
+            float stepDistance = currentImpulse * Time.fixedDeltaTime;
+            rb.MovePosition(Vector2.MoveTowards(rb.position, targetPosition, stepDistance));
+
+            if (burstActive)
+            {
+                currentImpulse = Mathf.MoveTowards(currentImpulse, dashingImpulse, (burstImpulse - dashingImpulse) * Time.fixedDeltaTime * 0.1f);
+                if (Mathf.Approximately(currentImpulse, dashingImpulse))
+                {
+                    burstActive = false;
+                }
+            }
+
+            yield return new WaitForFixedUpdate();
+
+            // check if dash was interrupted
+            if (!IsDashing)
+            {
+                wasInterrupted = true;
+                break;
+            }
+        }
+
+
+        trailRenderer.emitting = false;
+        rb.gravityScale = originalGravity;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete; // set back
+
+        IsDashing = false;
+        yield return new WaitForSeconds(dashingCooldown);
+
+        if (wasInterrupted)
+        {
+            canDash = false;
+        }
+        else
+        {
+            canDash = true;
+        }
+    }
+
+
 
     public void OnAttack(InputAction.CallbackContext context)
     {
@@ -464,7 +541,7 @@ public class PlayerController : MonoBehaviour
             AttackBossProjectiles(hit);
 
             // alternatively just destroy in one hit
-            if (hit.CompareTag(destroyableTag))
+            if (hit.CompareTag(destroyableObjectTag))
             {
                 Destroy(hit.gameObject);
             }
@@ -522,7 +599,7 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // handle collision with hostile object
-        if (collision.gameObject.CompareTag("Hostile") || collision.gameObject.layer == LayerMask.NameToLayer("Hostile"))
+        if (collision.gameObject.CompareTag(hostileObjectTag) || collision.gameObject.layer == LayerMask.NameToLayer(hostileObjectTag))
         {
             gameObject.SetActive(false);
             RespawnController.instance.AnnouncePlayerDeath();

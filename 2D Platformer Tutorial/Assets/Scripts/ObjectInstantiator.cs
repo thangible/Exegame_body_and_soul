@@ -39,7 +39,7 @@ public class ObjectInstantiator : MonoBehaviour
         }
 
 
-        if (RespawnController.instance.HasDiedRecently())
+        if (RespawnController.instance.HasRecentlyDied())
         {
             HandlePlayerDeath();
 

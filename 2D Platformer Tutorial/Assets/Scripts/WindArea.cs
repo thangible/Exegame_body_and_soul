@@ -135,6 +135,12 @@ public class WindArea : MonoBehaviour
 
         Debug.Log("Additional force applied: " + additionalForceMagnitude + "for duration of " + duration);
         StartCoroutine(AddForceOverTime(rb, additionalForce, duration));
+
+        if (RespawnController.instance.HasRecentlyDied())
+        {
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
     }
 
     private float BiasRandom(float min, float max, float biasPower)
@@ -167,6 +173,8 @@ public class WindArea : MonoBehaviour
         // ramp-up phase
         while (elapsedTime < rampUpDuration)
         {
+            if (RespawnController.instance.HasRecentlyDied()) yield break;
+
             float t = elapsedTime / rampUpDuration;
             Vector2 currentForce = Vector2.Lerp(Vector2.zero, force, t);
             rb.AddForce(currentForce * Time.fixedDeltaTime, ForceMode2D.Force);
@@ -179,6 +187,8 @@ public class WindArea : MonoBehaviour
         elapsedTime = 0.0f;
         while (elapsedTime < constantForceDuration)
         {
+            if (RespawnController.instance.HasRecentlyDied()) yield break;
+
             rb.AddForce(force * Time.fixedDeltaTime, ForceMode2D.Force);
 
             elapsedTime += Time.fixedDeltaTime;
@@ -189,6 +199,8 @@ public class WindArea : MonoBehaviour
         elapsedTime = 0.0f;
         while (elapsedTime < rampDownDuration)
         {
+            if (RespawnController.instance.HasRecentlyDied()) yield break;
+
             float t = elapsedTime / rampDownDuration;
             Vector2 currentForce = Vector2.Lerp(force, Vector2.zero, t);
             rb.AddForce(currentForce * Time.fixedDeltaTime, ForceMode2D.Force);
@@ -206,6 +218,8 @@ public class WindArea : MonoBehaviour
         float elapsedTime = 0.0f;
         while (elapsedTime < transitionDuration)
         {
+            if (RespawnController.instance.HasRecentlyDied()) yield break;
+
             float t = elapsedTime / transitionDuration;
             rb.mass = Mathf.Lerp(startMass, endMass, t);
             rb.gravityScale = Mathf.Lerp(startGravityScale, endGravityScale, t);

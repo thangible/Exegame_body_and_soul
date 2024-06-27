@@ -75,11 +75,11 @@ public class RespawnController : MonoBehaviour
 
         if (isPlayerDead)
         {
-            StartCoroutine(SetHasDiedRecently());
+            StartCoroutine(SetHasRecentlyDied());
         }
     }
 
-    private IEnumerator SetHasDiedRecently()
+    private IEnumerator SetHasRecentlyDied()
     {
         lock (playerAliveLock)
         {
@@ -92,7 +92,7 @@ public class RespawnController : MonoBehaviour
         }
     }
 
-    public bool HasDiedRecently()
+    public bool HasRecentlyDied()
     {
         lock (playerAliveLock)
         {
