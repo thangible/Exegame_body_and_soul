@@ -10,7 +10,7 @@ public class RespawnController : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] public Transform respawnPoint;
 
-    public bool isPlayerAlive;
+    public bool isPlayerAlive = true;
     private bool hasRecentlyDied; // otherwise some objects do not get instantiated (player respawns too quickly for that)
     private float recentlyDiedDuration = 1f;
 

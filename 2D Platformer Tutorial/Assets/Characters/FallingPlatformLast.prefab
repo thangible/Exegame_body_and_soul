@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 8517989391666099965}
   - component: {fileID: 3193809264387446372}
-  - component: {fileID: 7284466722733733858}
+  - component: {fileID: -3893156241758511192}
   - component: {fileID: 278403280217504039}
   - component: {fileID: 3790777400505739040}
   - component: {fileID: 8087670530567868830}
-  m_Layer: 0
-  m_Name: FallingPlatform
+  m_Layer: 6
+  m_Name: FallingPlatformLast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -88,8 +88,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &7284466722733733858
-BoxCollider2D:
+--- !u!60 &-3893156241758511192
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -130,9 +130,13 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.5, y: 0.5}
+      - {x: -0.5, y: -0.5}
+      - {x: 0.5, y: -0.5}
+      - {x: 0.5, y: 0.5}
+  m_UseDelaunayMesh: 0
 --- !u!50 &278403280217504039
 Rigidbody2D:
   serializedVersion: 4

@@ -8,83 +8,181 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Speed")]
-    public float walkSpeed = 5f;
-    public float runSpeed = 8f;
-    public float airWalkSpeed = 7f;
-    public string hostileObjectTag = "Hostile";
+    [Header("Walk")]
+    [Range(1f, 100f)] public float maxWalkSpeed = 12.5f;
+    [Range(0f, 50f)] public float groundAcceleration = 5f;
+    [Range(0f, 50f)] public float groundDeceleration = 20f;
+    [Range(1f, 100f)] public float maxAirWalkSpeed = 7f;
+    [Range(0f, 50f)] public float airAcceleration = 5f;
+    [Range(0f, 50f)] public float airDeceleration = 5f;
+    [Range(0f, 50f)] public float frictionAmount = 1f;
+    private Vector2 _moveVelocity;
+    private Vector2 moveInput; // movement input
+    private float stopMovementTolerance = 0.05f;
+    private float stopMovementToleranceTimer = 0f;
+
+
+    [Header("Run")]
+    [Range(1f, 100f)] public float maxRunSpeed = 20f;
+
     
     [Header("Jump")]
-    public float jumpImpulse = 8f;
-    public int jumpCounter = 0;
-    private bool canWallJump = true;
+    public float jumpImpulse = 8f; // could be named jumpHeight
+    [Range(1f, 100f)] public float maxAirJumpSpeed = 7f;
+    public float maxIdleForceIncrease = 1.1f;
+    public float jumpGravityScaleFactor = 1.5f;
+    private float jumpGravityCompensationFactor = 1.05f;
+    public float maxFallSpeed = 20f;
+    public float jumpApexThreshold = 5f;
+    public float jumpHangTimeGravityFactor = 2f;
+    // no jump cut because of kinect controls
+    public float jumpFallTimeGravityFactor = 2f;
+    public float doubleJumpCooldown = 1f;
+    public float maxDoubleJumpForceReduction = 1.3f;
+    public float disableDoubleJumpThreshold = 15f;
+    //public float disableDashAfterJumpThreshold = 15f;
+    public bool IsJumping { get; private set; }
+    private bool _isJumpFalling;
+    //private bool canWallJump = true;
+    private bool canDoubleJump = true;
 
+    [Range(0f, 1f)] public float jumpBufferTime = 0.1f;
+    [Range(0f, 1f)] public float jumpCoyoteTime = 0.1f;
+    private float jumpBufferTimer = 10f;
+    private float jumpCoyoteTimer = 0f;
+    private float timeSinceLastJump = 0f;
+    private int jumpCounter = 0;
+    private float timeSinceLastJumpCompleted = 0f;
+
+    // Fall damage
     public float fallDamageThreshold = 15f; // falling speed threshhold; not distance
+    public float fallDamageAfterJumpingThreshold = 5f;
+    public float fallingGravityFactor = 1.2f;
+    private float timeSinceLastFallCompleted = 0f;
     private bool playerDiesFromFallDamage = false;
     private bool landedOnNoFallDamageObject = false;
     private bool canTakeFallDamage = true;
-    public string noFallDamageObjectTag = "NoFallDamageObject";
+    private string noFallDamageObjectTag = "NoFallDamageObject";
 
     [Header("Dash")]
     public float dashingImpulse = 24f;
     public float dashingDistance = 12f;
     public float dashingCooldown = 1f;
-    //private float dashingTime = 0.2f;
+    private float dashingTimer = 0f;
     private bool canDash = true;
+    private bool disabledDoubleJump = false;
 
     [Header("Attack")]
     public float attackRange = 2; // 0.6f;
     public int attackDamage = 1;
     public float attackCooldown = 0.6f;
-    public string destroyableObjectTag = "DestroyableObject";
     private bool canAttack = true;
+    private string destroyableObjectTag = "DestroyableObject";
+    private string hostileObjectTag = "Hostile";
 
 
-    Vector2 moveInput;
     TouchingDirections touchingDirections;
 
     private PuzzlePlatform[] puzzlePlatforms;
 
     private float puzzle_airWalkSpeed;
+    private float puzzle_airJumpSpeed;
     private float puzzle_jumpImpulse;
     private float original_airWalkSpeed;
+    private float original_airJumpSpeed;
     private float original_jumpImpulse;
+
+    private float original_gravityScale;
 
     //private GameObject currentOneWayPlatform;
     //private float secondsToFallThroughPlatform = 0.25f;
 
 
+
     public float CurrentMoveSpeed { get
         {
-            if(CanMove) // can restrict movement here with: CanMove
+            float lerpAmount = 1f;
+            float accelRate = 1f;
+
+            if (CanMove) // can restrict movement here with: CanMove
             {
-                if (IsMoving && !touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling) // already added isOnCeiling
+                float targetSpeed = moveInput.x;
+
+                if (IsMoving) // !touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling // IsMoving is moveInput != Vector2.zero
                 {
+                    // SetFacingDirection(moveInput); // could call this here
+                    Vector2 targetVelocity = Vector2.zero;
+
                     if (touchingDirections.IsGrounded)
                     {
+                        // Ground move
+                        accelRate = groundAcceleration;
+
                         if (IsRunning)
                         {
-                            return runSpeed;
+                            targetVelocity = new Vector2(moveInput.x, 0f) * maxRunSpeed;
+
+                            targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed * maxRunSpeed, lerpAmount);
                         }
                         else
                         {
-                            return walkSpeed;
+                            targetVelocity = new Vector2(moveInput.x, 0f) * maxWalkSpeed;
+
+                            targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed * maxWalkSpeed, lerpAmount);
                         }
-                    } else
+                    } 
+                    else
                     {
                         // Air move
-                        return airWalkSpeed;
+                        accelRate = airAcceleration;
+                        targetVelocity = new Vector2(moveInput.x, 0f) * maxAirWalkSpeed;
+
+                        if (IsJumping || _isJumpFalling)
+                        {
+                            targetVelocity = new Vector2(moveInput.x, 0f) * maxAirJumpSpeed;
+                            targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed * maxAirJumpSpeed, lerpAmount);
+
+                            // boost acc when reaching peak of jump
+                            if (Mathf.Abs(rb.velocity.y) < jumpApexThreshold)
+                            {
+                                accelRate *= 1.5f;
+                                targetSpeed *= 1.1f;
+                            }
+                        } 
+                        else
+                        {
+                            targetSpeed = Mathf.Lerp(rb.velocity.x, targetSpeed * maxAirWalkSpeed, lerpAmount);
+                        }
                     }
+
+                    _moveVelocity = Vector2.Lerp(_moveVelocity, targetVelocity, accelRate * Time.fixedDeltaTime);
                 }
                 else
                 {
-                    return 0; // idle
+                    accelRate = groundDeceleration;
+                    if (!touchingDirections.IsGrounded)
+                    {
+                        // Air move
+                        accelRate = airDeceleration;
+                    } 
+
+                    _moveVelocity = Vector2.Lerp(_moveVelocity, Vector2.zero, accelRate * Time.fixedDeltaTime);
+
+                    // apply counter force when decelerating
+                    float amount = Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(frictionAmount));
+                    amount *= Mathf.Sign(rb.velocity.x);
+
+                    rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
                 }
 
+
+                float speedDif = targetSpeed - rb.velocity.x;
+                float movement = Mathf.Pow(Mathf.Abs(speedDif) * accelRate, 0.9f) * Math.Sign(speedDif);
+                return movement;
             }
             else
             {
-                return 0; // movement locked (when attacking)
+                return 0f; // movement locked (when attacking)
             }
 
         }
@@ -193,69 +291,181 @@ public class PlayerController : MonoBehaviour
 
         puzzlePlatforms = FindObjectsOfType<PuzzlePlatform>();
 
-        puzzle_airWalkSpeed = airWalkSpeed / 2;
-        puzzle_jumpImpulse = jumpImpulse / 1.4f;
-        original_airWalkSpeed = airWalkSpeed;
+        puzzle_airWalkSpeed = maxAirWalkSpeed / 2;
+        puzzle_airJumpSpeed = maxAirJumpSpeed / 1.1f;
+        puzzle_jumpImpulse = jumpImpulse / 1.1f;
+        original_airWalkSpeed = maxAirWalkSpeed;
+        original_airJumpSpeed = maxAirJumpSpeed;
         original_jumpImpulse = jumpImpulse;
+
+        original_gravityScale = rb.gravityScale;
     }
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void OnValidate()
     {
-        
+    }
+
+    private void OnEnable()
+    {
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (IsDashing)
-        {
-            // Prevent movement while dashing
-            return;
-        }
+        stopMovementToleranceTimer += Time.deltaTime;
 
-        // Count jumps until hitting the ground or wall
-        if (touchingDirections.IsGrounded)
+        if (!touchingDirections.IsGrounded)
         {
-            jumpCounter = 0;
+            jumpCoyoteTimer += Time.deltaTime;
         }
+        jumpBufferTimer += Time.deltaTime;
+        timeSinceLastJump += Time.deltaTime;
 
-        //FallThroughPlatform(); // TODO re-activate ?
+        timeSinceLastJumpCompleted += Time.deltaTime;
+        timeSinceLastFallCompleted += Time.deltaTime;
+
+        dashingTimer += Time.deltaTime;
+
+
+        // Set movement boolean with tolerance (to stop quick switch to idle mode when changing direction)
+        if (moveInput != Vector2.zero)
+        {
+            IsMoving = true;
+            stopMovementToleranceTimer = 0f;
+        }
+        else
+        {
+            if (stopMovementToleranceTimer > stopMovementTolerance)
+            {
+                IsMoving = false;
+            }
+        }
     }
 
     private void FixedUpdate()
     {
+        // Movement on x
+        //float movement = CurrentMoveSpeed;
+        //rb.velocity = new Vector2(_moveVelocity.x, rb.velocity.y);
+        //rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y); // * Time.fixedDeltaTime already handled by RigitBody
+        rb.AddForce(CurrentMoveSpeed * Vector2.right, ForceMode2D.Force);
+
+
+        // Jumping
+        if (jumpBufferTimer < jumpBufferTime && (!IsJumping && !_isJumpFalling) && (touchingDirections.IsGrounded || jumpCoyoteTimer < jumpCoyoteTime))
+        {
+            InitializeJump(false);
+        }
+        // Double Jump
+        else if (jumpBufferTimer < jumpBufferTime && (IsJumping || _isJumpFalling) && (jumpCounter < 2 && timeSinceLastJump > doubleJumpCooldown && canDoubleJump))
+        {
+            InitializeJump(true);
+        }
+
+        HandleJumpState();
+
+        // disable double jump
+        if (IsFalling && Mathf.Abs(rb.velocity.y) > disableDoubleJumpThreshold)
+        {
+            canDoubleJump = false; // disable double jump
+        }
+
+
+        // Dashing
+        dashingTimer += Time.deltaTime;
         if (IsDashing)
-        {   
+        {
             // Prevent movement while dashing
             return;
         }
 
 
         // track falling state
-        rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y); // * Time.fixedDeltaTime already handled by RigitBody
         animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
 
         // apply fall damage
-        HandleFallDamage();
+        HandleFall();
+
+        //FallThroughPlatform(); // TODO re-activate ?
     }
 
 
-    private void HandleFallDamage()
+    /*
+    private void Slide()
+    {
+        //We remove the remaining upwards Impulse to prevent upwards sliding
+        if (rb.velocity.y > 0)
+        {
+            rb.AddForce(-rb.velocity.y * Vector2.up, ForceMode2D.Impulse);
+        }
+
+        //Works the same as the Run but only in the y-axis
+        //THis seems to work fine, buit maybe you'll find a better way to implement a slide into this system
+        float speedDif = Data.slideSpeed - RB.velocity.y;
+        float movement = speedDif * Data.slideAccel;
+        //So, we clamp the movement here to prevent any over corrections (these aren't noticeable in the Run)
+        //The force applied can't be greater than the (negative) speedDifference * by how many times a second FixedUpdate() is called. For more info research how force are applied to rigidbodies.
+        movement = Mathf.Clamp(movement, -Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime), Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime));
+
+        rb.AddForce(movement * Vector2.up);
+    }
+    */
+
+    private void HandleFall()
     {
         int layerMask = LayerMask.GetMask("Default", "Ground");
 
+        bool lastIsFalling = IsFalling;
         IsFalling = rb.velocity.y < 0 && !touchingDirections.IsGrounded;
+
+        /*
+        if (lastIsFalling && !(IsFalling))
+        {
+            if (touchingDirections.IsGrounded)
+            {
+                animator.SetTrigger(AnimationStrings.impactAfterFalling);
+            }
+        }
+        */
+
+
+        if (IsFalling && (!IsJumping && !_isJumpFalling))
+        {
+            rb.gravityScale = original_gravityScale * fallingGravityFactor;
+        } 
+        else if (!IsFalling && lastIsFalling && timeSinceLastJumpCompleted > 0.05f && timeSinceLastFallCompleted > 0.05f)
+        {
+            //print("hit the ground after falling");
+            timeSinceLastFallCompleted = 0f;
+            animator.SetTrigger(AnimationStrings.impactAfterFalling);
+            rb.gravityScale = original_gravityScale;
+        }
+
         if (IsFalling && canTakeFallDamage)
         {
             // (almost) seal fate of death when reaching a certain y velocity
-            if (Mathf.Abs(rb.velocity.y) > fallDamageThreshold && !playerDiesFromFallDamage)
+            if (_isJumpFalling)
             {
-                canDash = false; // disable dash
-                playerDiesFromFallDamage = true;
-                print("will die");
+                if (Mathf.Abs(rb.velocity.y) > fallDamageAfterJumpingThreshold && !playerDiesFromFallDamage)
+                {
+                    canDash = false; // disable dash
+                    canDoubleJump = false; // disable double jump
+                    playerDiesFromFallDamage = true;
 
+                }
+            } 
+            else
+            {
+                if (Mathf.Abs(rb.velocity.y) > fallDamageThreshold && !playerDiesFromFallDamage)
+                {
+                    canDash = false; // disable dash
+                    canDoubleJump = false; // disable double jump
+                    playerDiesFromFallDamage = true;
+
+                }
             }
+            
 
             // check for collisions below the player
             float distanceToGround = (playerCollider.size.y) + 0.1f;
@@ -282,6 +492,8 @@ public class PlayerController : MonoBehaviour
             landedOnNoFallDamageObject = false;
             playerDiesFromFallDamage = false;
             canDash = true;
+            canDoubleJump = true;
+            disabledDoubleJump = false;
         }
     }
 
@@ -289,9 +501,7 @@ public class PlayerController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context)
     {
         moveInput = context.ReadValue<Vector2>();
-
-        IsMoving = moveInput != Vector2.zero;
-
+        //IsMoving = moveInput != Vector2.zero;
         SetFacingDirection(moveInput);
     }
     
@@ -301,11 +511,13 @@ public class PlayerController : MonoBehaviour
         {
             // Face the right
             IsFacingRight = true;
+            //transform.Rotate(0f, 100, 0f);
         }
         else if (moveInput.x < 0 && IsFacingRight)
         {
             // Face the left
             IsFacingRight = false;
+            //transform.Rotate(0f, -100, 0f);
         }
         else if (moveInput.x == 0)
         {
@@ -331,10 +543,13 @@ public class PlayerController : MonoBehaviour
     {
         if (true) // can restrict movement here with: CanMove
         {
+            //IsJumping = true;
+
             // Count jumps
             if (context.started)
             {
-                jumpCounter += 1;
+                jumpBufferTimer = 0f;
+                //jumpCounter += 1;
 
                 // switch "puzzle" platforms on jump for all found PuzzlePlatform instances
                 foreach (PuzzlePlatform puzzlePlatform in puzzlePlatforms)
@@ -347,13 +562,27 @@ public class PlayerController : MonoBehaviour
 
             }
 
+            if (context.performed)
+            {
+                // Update the jump buffer timer if the key is still held down
+                jumpBufferTimer = 0f;
+            }
+
             // Normal jump
-            if (context.started && touchingDirections.IsGrounded)
+            /*
+            if (context.started && touchingDirections.IsGrounded) // without coyote time: context.started && touchingDirections.IsGrounded
             {
                 animator.SetTrigger(AnimationStrings.jump);
-                rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
 
-                // Double jump when on wall
+                LastPressedJumpTime = 0;
+                LastOnGroundTime = 0;
+
+                float force = jumpImpulse;
+                if (rb.velocity.y < 0)
+                    force -= rb.velocity.y;
+                //rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + ((force + (0.5f * Time.fixedDeltaTime * -jumpGravityStrengthFactor)) / rb.mass));
+                //rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
             }
             else if (context.started && touchingDirections.IsOnWall)
             {
@@ -362,12 +591,105 @@ public class PlayerController : MonoBehaviour
                     //PerformWallJump(); // TODO re-activate Wall jump ?
                 }
             }
-
+            */
 
             // Tapping for little jumps
+            /*
             if (context.canceled && rb.velocity.y > 0f)
             {
                 rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            }
+            */
+        }
+    }
+
+    private void InitializeJump(bool doubleJump)
+    {
+        IsJumping = true;
+        animator.SetTrigger(AnimationStrings.jump);
+
+        timeSinceLastJump = 0f;
+        jumpCounter += 1;
+
+
+        float currentVelocity = rb.velocity.magnitude;
+        float velocityForMaxScaling = maxAirJumpSpeed;
+        currentVelocity = Mathf.Clamp(currentVelocity, 0f, velocityForMaxScaling);
+
+        float velocityFactor = currentVelocity / velocityForMaxScaling;
+        float forceIncreaseFactor = Mathf.Lerp(maxIdleForceIncrease, 1f, velocityFactor);
+        float force = jumpImpulse * forceIncreaseFactor;
+
+        if (doubleJump)
+        {
+            _isJumpFalling = false;
+
+            currentVelocity = Mathf.Abs(rb.velocity.y);
+            velocityForMaxScaling = maxAirJumpSpeed;
+            currentVelocity = Mathf.Clamp(currentVelocity, 0f, velocityForMaxScaling);
+            float forceReductionFactor = Mathf.Lerp(1f, maxDoubleJumpForceReduction, currentVelocity / velocityForMaxScaling);
+            print(forceReductionFactor);
+            force = jumpImpulse / forceReductionFactor;
+        }
+        if (rb.velocity.y < 0)
+            force -= rb.velocity.y;
+
+        // do the actual jump
+        rb.gravityScale = original_gravityScale * jumpGravityScaleFactor;
+
+        //rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+        rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + ((force + (0.5f * Time.fixedDeltaTime * -jumpGravityCompensationFactor)) / rb.mass));
+        //rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
+    }
+
+    private void HandleJumpState()
+    {
+        // set jumping states
+        if (IsJumping && rb.velocity.y < 0)
+        {
+            IsJumping = false;
+            _isJumpFalling = true;
+        }
+
+        if (_isJumpFalling && touchingDirections.IsGrounded) // after jump like: !IsJumping && !_isJumpFalling && touchingDirections.IsGrounded
+        {
+            IsJumping = false;
+            _isJumpFalling = false;
+            timeSinceLastJumpCompleted = 0f;
+            //print("hit the ground after JUMP falling")
+            animator.SetTrigger(AnimationStrings.impactAfterJumpFalling);
+
+            if (!disabledDoubleJump)
+            {
+                canDoubleJump = true;
+
+            }
+
+            jumpCounter = 0;
+            jumpCoyoteTimer = 0f;
+
+            rb.gravityScale = original_gravityScale;
+        }
+
+
+        // apex of jump
+        if ((IsJumping || _isJumpFalling) && Mathf.Abs(rb.velocity.y) < jumpApexThreshold)
+        {
+            // change gravity on apex
+            rb.gravityScale = original_gravityScale * jumpHangTimeGravityFactor;
+        }
+        // rest of the fall
+        else if (_isJumpFalling && rb.velocity.y < 0)
+        {
+            // gigher gravity if falling
+            rb.gravityScale = original_gravityScale * jumpFallTimeGravityFactor;
+            // caps maximum fall speed after jumping
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -maxFallSpeed));
+
+            // disable double jump when too close to ground
+            if (touchingDirections.IsApproachingGround && !touchingDirections.IsGrounded) // fixed double jump disabled right before hitting ground
+            {
+                canDoubleJump = false;
             }
         }
     }
@@ -379,7 +701,7 @@ public class PlayerController : MonoBehaviour
 
         //if (jumpCounter <= 1)
         {
-            animator.SetTrigger(AnimationStrings.jump);
+            //animator.SetTrigger(AnimationStrings.jump);
             rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
 
             // increase gravity at peak of jump curve
@@ -402,103 +724,127 @@ public class PlayerController : MonoBehaviour
     // Implement a dash
     private IEnumerator Dash()
     {
-        bool wasInterrupted = false; // interrupted by an external influence
-
-        canDash = false;
-        IsDashing = true;
-
-        float originalGravity = rb.gravityScale;
-        rb.gravityScale = 0f;
-        rb.velocity = Vector2.zero;
-        //rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // do not allow dashing through any obstacles
-        int layerMask = LayerMask.GetMask("Default", "Ground"); // "Default", could be added to detect f.E. triggers
-
-        //Vector2 dashDirection = new Vector2(transform.localScale.x * dashingImpulse, 0);
-        Vector2 dashDirection = new Vector2(transform.localScale.x, 0).normalized; // more constant version
-        Vector2 targetPosition = rb.position + dashDirection * dashingDistance;
-
-        RaycastHit2D[] hits = new RaycastHit2D[10];
-        trailRenderer.emitting = true;
-
-        float burstImpulse = dashingImpulse * 1.5f;
-        float currentImpulse = burstImpulse;
-        bool burstActive = true;
-
-        while (Vector2.Distance(rb.position, targetPosition) > 0.1f)
+        if (dashingTimer > dashingCooldown)
         {
-            // raycast to detect any colliders in the path of the dash
-            Vector2 boxSize = new Vector2(dashingDistance / (dashingDistance / 1.5f), (playerCollider.size.y) + 0.1f);
-            int numHits = Physics2D.BoxCastNonAlloc(rb.position, boxSize, 0f, dashDirection, hits, dashingDistance/ (dashingDistance / 1.5f), layerMask);
+            bool wasInterrupted = false; // interrupted by an external influence
 
-            //int numHits = Physics2D.RaycastNonAlloc(rb.position, dashDirection.normalized, hits, raycastDistance, layerMask);
-            bool stopDash = false; // stop when hitting ground layer
-
-            if (numHits > 0)
-            {
-                for (int i = 0; i < numHits; i++)
-                {
-                    Collider2D collider = hits[i].collider;
-                    if (collider == null)
-                    {
-                        continue;
-                    }
-
-                    if (collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                    {
-                        stopDash = true;
-                        break;
-                    }
-
-                    // handle other collisions with f.E. triggers
-                    //if (collider.isTrigger)
-                }
-            }
-
-            // hit a ground layer object
-            if (stopDash)
-            {
-                rb.velocity = Vector2.zero;
-                break;
-            }
-
-
-            float stepDistance = currentImpulse * Time.fixedDeltaTime;
-            rb.MovePosition(Vector2.MoveTowards(rb.position, targetPosition, stepDistance));
-
-            if (burstActive)
-            {
-                currentImpulse = Mathf.MoveTowards(currentImpulse, dashingImpulse, (burstImpulse - dashingImpulse) * Time.fixedDeltaTime * 0.1f);
-                if (Mathf.Approximately(currentImpulse, dashingImpulse))
-                {
-                    burstActive = false;
-                }
-            }
-
-            yield return new WaitForFixedUpdate();
-
-            // check if dash was interrupted
-            if (!IsDashing)
-            {
-                wasInterrupted = true;
-                break;
-            }
-        }
-
-
-        trailRenderer.emitting = false;
-        rb.gravityScale = originalGravity;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete; // set back
-
-        IsDashing = false;
-        yield return new WaitForSeconds(dashingCooldown);
-
-        if (wasInterrupted)
-        {
             canDash = false;
-        }
-        else
-        {
-            canDash = true;
+            IsDashing = true;
+
+            float originalGravity = rb.gravityScale;
+            rb.gravityScale = 0f;
+            rb.velocity = Vector2.zero;
+            //rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; // do not allow dashing through any obstacles
+            int layerMask = LayerMask.GetMask("Default", "Ground"); // "Default", could be added to detect f.E. triggers
+
+            //Vector2 dashDirection = new Vector2(transform.localScale.x * dashingImpulse, 0);
+            Vector2 dashDirection = new Vector2(transform.localScale.x, 0).normalized; // more constant version
+            Vector2 targetPosition = rb.position + dashDirection * dashingDistance;
+
+            RaycastHit2D[] hits = new RaycastHit2D[10];
+            trailRenderer.emitting = true;
+
+            float burstImpulse = dashingImpulse * 1.5f;
+            float currentImpulse = burstImpulse;
+            bool burstActive = true;
+
+
+            Vector2 previousPosition = rb.position;
+            while (Vector2.Distance(rb.position, targetPosition) > 0.1f)
+            {
+                // raycast to detect any colliders in the path of the dash
+                Vector2 boxSize = new Vector2(dashingDistance / (dashingDistance / 1.5f), playerCollider.bounds.size.y);
+
+                int numHits = Physics2D.BoxCastNonAlloc(rb.position, boxSize, 0f, dashDirection, hits, dashingDistance / (dashingDistance / 1.5f), layerMask);
+
+                //int numHits = Physics2D.RaycastNonAlloc(rb.position, dashDirection.normalized, hits, raycastDistance, layerMask);
+                bool stopDash = false; // stop when hitting ground layer
+
+                /* show box
+                Vector2 boxOrigin = rb.position + dashDirection.normalized * boxSize.x / 2;
+                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), Color.red);
+                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), Color.red);
+                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), Color.red);
+                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), Color.red);
+                */
+
+                if (numHits > 0)
+                {
+                    for (int i = 0; i < numHits; i++)
+                    {
+                        Collider2D collider = hits[i].collider;
+                        if (collider == null)
+                        {
+                            continue;
+                        }
+
+                        if (collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                        {
+                            stopDash = true;
+                            break;
+                        }
+
+                        // handle other collisions with f.E. triggers
+                        //if (collider.isTrigger)
+                    }
+                }
+
+                // hit a ground layer object
+                if (stopDash)
+                {
+                    rb.velocity = Vector2.zero;
+                    //Vector2 stoppingForce = -rb.velocity * 10f;
+                    //rb.AddForce(stoppingForce, ForceMode2D.Impulse);
+                    break;
+                }
+
+
+                float stepDistance = currentImpulse * Time.fixedDeltaTime;
+                rb.MovePosition(Vector2.MoveTowards(rb.position, targetPosition, stepDistance));
+
+                if (burstActive)
+                {
+                    currentImpulse = Mathf.MoveTowards(currentImpulse, dashingImpulse, (burstImpulse - dashingImpulse) * Time.fixedDeltaTime * 0.1f);
+                    if (Mathf.Approximately(currentImpulse, dashingImpulse))
+                    {
+                        burstActive = false;
+                    }
+                }
+
+                yield return new WaitForFixedUpdate();
+
+                // free player when stuck
+                if (Vector2.Distance(rb.position, previousPosition) < 0.01f)
+                {
+                    break;
+                }
+                previousPosition = rb.position;
+
+                // check if dash was interrupted
+                if (!IsDashing)
+                {
+                    wasInterrupted = true;
+                    break;
+                }
+            }
+
+
+            trailRenderer.emitting = false;
+            rb.gravityScale = originalGravity;
+            rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete; // set back
+
+            IsDashing = false;
+            dashingTimer = 0f;
+            //yield return new WaitForSeconds(dashingCooldown);
+
+            if (wasInterrupted)
+            {
+                canDash = false;
+            }
+            else
+            {
+                canDash = true;
+            }
         }
     }
 
@@ -577,7 +923,7 @@ public class PlayerController : MonoBehaviour
     private void FallThroughPlatform() // old: IEnumerator
     {
         /* old
-        BoxCollider2D platformCollider = currentOneWayPlatform.GetComponent<BoxCollider2D>();
+        Collider2D platformCollider = currentOneWayPlatform.GetComponent<Collider2D>();
 
         animator.SetTrigger(AnimationStrings.fallThroughPlatform);
         Physics2D.IgnoreCollision(playerCollider, platformCollider);
@@ -634,22 +980,45 @@ public class PlayerController : MonoBehaviour
         // interrupt dash
         IsDashing = false;
 
-        canWallJump = false;
+        //canWallJump = false;
+        canDoubleJump = false;
+        disabledDoubleJump = true;
         canDash = false;
         canTakeFallDamage = false;
 
-        airWalkSpeed = puzzle_airWalkSpeed;
+        maxAirWalkSpeed = puzzle_airWalkSpeed;
+        maxAirJumpSpeed = puzzle_airJumpSpeed;
         jumpImpulse = puzzle_jumpImpulse;
     }
 
     public void ResetAfterPuzzleSection()
     {
-        canWallJump = true;
+        //canWallJump = true;
+        canDoubleJump = true;
+        disabledDoubleJump = false;
         canDash = true;
         canTakeFallDamage = true;
 
-        airWalkSpeed = original_airWalkSpeed;
+        maxAirWalkSpeed = original_airWalkSpeed;
+        maxAirJumpSpeed = original_airJumpSpeed;
         jumpImpulse = original_jumpImpulse;
     }
 
+
+    public void PrepareForCaveSection()
+    {
+        // interrupt dash
+        IsDashing = false;
+
+        //canWallJump = false;
+        canDash = true;
+        canTakeFallDamage = false;
+    }
+
+    public void ResetAfterCaveSection()
+    {
+        //canWallJump = true;
+        canDash = true;
+        canTakeFallDamage = true;
+    }
 }

@@ -44,8 +44,8 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 counterpartNextLocation;
     [SerializeField] private SpriteRenderer counterpartPlatform;
 
-    private BoxCollider2D platformCollider;
-    private BoxCollider2D counterpartCollider;
+    private Collider2D platformCollider;
+    private Collider2D counterpartCollider;
 
     public float collisionCooldown = 0.5f;
     private bool collison = false;
@@ -65,7 +65,7 @@ public class MovingPlatform : MonoBehaviour
         targetLocation = movingToLocation.localPosition;
         nextLocation = targetLocation;
 
-        platformCollider = platform.GetComponent<BoxCollider2D>();
+        platformCollider = platform.GetComponent<Collider2D>();
         maxDistancePlatform = Vector3.Distance(sourceLocation, targetLocation);
 
 
@@ -90,7 +90,7 @@ public class MovingPlatform : MonoBehaviour
 
             }
 
-            counterpartCollider = counterpartPlatform.GetComponent<BoxCollider2D>();
+            counterpartCollider = counterpartPlatform.GetComponent<Collider2D>();
             maxDistanceCounterpartPlatform = Vector3.Distance(counterpartSourceLocation, counterpartTargetLocation);
         }
 

@@ -13,6 +13,8 @@ public class AnimationStrings : MonoBehaviour
 
     internal static string isGrounded = "isGrounded";
     internal static string yVelocity = "yVelocity"; // for falling
+    internal static string impactAfterFalling = "impactAfterFalling";
+    internal static string impactAfterJumpFalling = "impactAfterJumpFalling";
     internal static string jump = "jump";
     internal static string isOnWall = "isOnWall";
     internal static string isOnCeiling = "isOnCeiling";
@@ -20,6 +22,13 @@ public class AnimationStrings : MonoBehaviour
     internal static string attack = "attack";
 
     internal static string fallThroughPlatform = "fallThroughPlatform";
+
+
+
+    // NPC
+
+    internal static string npc_isIdle = "npcIdle";
+    internal static string npc_isInteracting = "npcInteracting";
 
 
 

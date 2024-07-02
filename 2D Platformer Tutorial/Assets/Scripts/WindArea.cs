@@ -35,6 +35,8 @@ public class WindArea : MonoBehaviour
     private bool additionalForceCooldownReady = false;
     float colliderYEnd = 0f;
 
+    private Coroutine currentCoroutine;
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -58,10 +60,24 @@ public class WindArea : MonoBehaviour
         if (!string.IsNullOrEmpty(collisionTag) && !collision.CompareTag(collisionTag))
             return;
 
+
         Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
 
         if (rb != null)
         {
+
+            if (RespawnController.instance.HasRecentlyDied())
+            {
+                rb.velocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+
+                if (currentCoroutine != null)
+                {
+                    StopCoroutine(currentCoroutine);
+                }
+            }
+
+
             float targetVelocityY = (windDirection == WindDirection.Up) ? Mathf.Min(rb.velocity.y + windForce.y, minYVelocity) :
                                                                          Mathf.Max(rb.velocity.y - windForce.y, -minYVelocity);
 
@@ -133,14 +149,10 @@ public class WindArea : MonoBehaviour
 
         Vector2 additionalForce = windForce * additionalForceMagnitude * 10;
 
-        Debug.Log("Additional force applied: " + additionalForceMagnitude + "for duration of " + duration);
-        StartCoroutine(AddForceOverTime(rb, additionalForce, duration));
+        Debug.Log("Additional force applied: " + additionalForceMagnitude + "for duration of " + duration); // TODO remove ?
 
-        if (RespawnController.instance.HasRecentlyDied())
-        {
-            rb.velocity = Vector2.zero;
-            rb.angularVelocity = 0f;
-        }
+
+        currentCoroutine = StartCoroutine(AddForceOverTime(rb, additionalForce, duration));
     }
 
     private float BiasRandom(float min, float max, float biasPower)
@@ -173,7 +185,7 @@ public class WindArea : MonoBehaviour
         // ramp-up phase
         while (elapsedTime < rampUpDuration)
         {
-            if (RespawnController.instance.HasRecentlyDied()) yield break;
+            if (RespawnController.instance.HasRecentlyDied()) break;
 
             float t = elapsedTime / rampUpDuration;
             Vector2 currentForce = Vector2.Lerp(Vector2.zero, force, t);
@@ -187,7 +199,7 @@ public class WindArea : MonoBehaviour
         elapsedTime = 0.0f;
         while (elapsedTime < constantForceDuration)
         {
-            if (RespawnController.instance.HasRecentlyDied()) yield break;
+            if (RespawnController.instance.HasRecentlyDied()) break;
 
             rb.AddForce(force * Time.fixedDeltaTime, ForceMode2D.Force);
 
@@ -199,7 +211,7 @@ public class WindArea : MonoBehaviour
         elapsedTime = 0.0f;
         while (elapsedTime < rampDownDuration)
         {
-            if (RespawnController.instance.HasRecentlyDied()) yield break;
+            if (RespawnController.instance.HasRecentlyDied()) break;
 
             float t = elapsedTime / rampDownDuration;
             Vector2 currentForce = Vector2.Lerp(force, Vector2.zero, t);
@@ -218,7 +230,7 @@ public class WindArea : MonoBehaviour
         float elapsedTime = 0.0f;
         while (elapsedTime < transitionDuration)
         {
-            if (RespawnController.instance.HasRecentlyDied()) yield break;
+            if (RespawnController.instance.HasRecentlyDied()) break;
 
             float t = elapsedTime / transitionDuration;
             rb.mass = Mathf.Lerp(startMass, endMass, t);

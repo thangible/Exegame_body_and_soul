@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7017446174946618992}
   - component: {fileID: 8099744106904262792}
   - component: {fileID: -7604104146049491415}
-  - component: {fileID: -4164310176059459440}
+  - component: {fileID: -3099357499960949149}
   - component: {fileID: 2728753160988948722}
   m_Layer: 0
   m_Name: SlowProjectile
@@ -219,8 +219,8 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!61 &-4164310176059459440
-BoxCollider2D:
+--- !u!58 &-3099357499960949149
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -251,19 +251,9 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.004799843, y: 0.00000047683716}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.625, y: 0.625}
-    newSize: {x: 1.375, y: 1.125}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Size: {x: 0.6166544, y: 0.64503384}
-  m_EdgeRadius: 0
+  m_Radius: 0.3125
 --- !u!114 &2728753160988948722
 MonoBehaviour:
   m_ObjectHideFlags: 0
