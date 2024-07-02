@@ -86,12 +86,13 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_MoveWithoutAttackingPlayerState.cs" />
+    <Compile Include="Assets\Scripts\Progress\SaveLoad.cs" />
+    <Compile Include="Assets\Scripts\Progress\ProgressController.cs" />
     <Compile Include="Assets\Scripts\Parallax\ParallaxCamera.cs.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\CameraController.cs" />
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_QuickRangedAttackState.cs" />
-    <Compile Include="Assets\Scripts\ProgressController.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraRegister.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraTriggerZone.cs" />
     <Compile Include="Assets\Scripts\GeneralTriggerZone.cs" />
@@ -106,7 +107,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\DropdownSample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
     <Compile Include="Assets\Scripts\Camera\CoroutineRunner.cs" />
-    <Compile Include="Assets\Scripts\RespawnController.cs" />
     <Compile Include="Assets\Scripts\JumpPad.cs" />
     <Compile Include="Assets\Scripts\StateMachine\SetBooleanBehaviour.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
@@ -122,6 +122,8 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
+    <Compile Include="Assets\Scripts\NoDestroy.cs" />
+    <Compile Include="Assets\Scripts\Progress\RespawnController.cs" />
     <Compile Include="Assets\Scripts\TouchingDirections.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Scripts\Parallax\ParallaxLayer.cs.cs" />
@@ -135,7 +137,6 @@
     <Compile Include="Assets\Scripts\DestroyableObject.cs" />
     <Compile Include="Assets\Scripts\PuzzleTeleporter.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_AttackPlayerState.cs" />
-    <Compile Include="Assets\TestUIObj\Scripts\NoDestroy.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
   </ItemGroup>
   <ItemGroup>

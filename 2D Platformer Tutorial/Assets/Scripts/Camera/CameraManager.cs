@@ -15,6 +15,48 @@ public class CameraManager : MonoBehaviour
     public static CinemachineVirtualCamera ActiveCamera = null;
 
 
+    public static int GetActiveCamera()
+    {
+        /*
+        if (ActiveCamera == null)
+        {
+            return ActiveCamera;
+        }*/
+
+        for (int i = 0; i < cameras.Count; i++)
+        {
+            if (cameras[i].Priority == 10)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    public static void SetActiveCamera(int idx)
+    {
+        /*
+        if (ActiveCamera == null)
+        {
+            return ActiveCamera;
+        }*/
+
+        for (int i = 0; i < cameras.Count; i++)
+        {
+            if (i == idx)
+            {
+                cameras[i].Priority = 10;
+                ActiveCamera = cameras[i];
+            } 
+            else
+            {
+                cameras[i].Priority = 0;
+            }
+        }
+    }
+
+
     public static bool IsActiveCamera(CinemachineVirtualCamera camera)
     {
         return camera == ActiveCamera;
