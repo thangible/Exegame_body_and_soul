@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\NPC.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventHandler.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeA.cs" />
+    <Compile Include="Assets\KinectView\Scripts\MultiSourceManager.cs" />
     <Compile Include="Assets\Scripts\Parallax\ParallaxBackground.cs.cs" />
     <Compile Include="Assets\Scripts\Enemies\SpikeShooter\SpikeShooter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
@@ -78,14 +79,18 @@
     <Compile Include="Assets\Scripts\Enemies\LaserShooter\LaserShooter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
     <Compile Include="Assets\Scripts\PuzzlePlatform.cs" />
+    <Compile Include="Assets\KinectView\Scripts\BodySourceManager.cs" />
     <Compile Include="Assets\Scripts\Enemies\SpikeShooter\SpikeParkourSectionScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\ObjectInstantiator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
+    <Compile Include="Assets\KinectView\Scripts\InfraredSourceView.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
+    <Compile Include="Assets\KinectView\Scripts\ColorSourceManager.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_MoveWithoutAttackingPlayerState.cs" />
+    <Compile Include="Assets\KinectView\Scripts\DepthSourceView.cs" />
     <Compile Include="Assets\Scripts\Progress\SaveLoad.cs" />
     <Compile Include="Assets\Scripts\Progress\ProgressController.cs" />
     <Compile Include="Assets\Scripts\Parallax\ParallaxCamera.cs.cs" />
@@ -93,6 +98,7 @@
     <Compile Include="Assets\Scripts\PlayerController.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_QuickRangedAttackState.cs" />
+    <Compile Include="Assets\KinectView\Scripts\DisableOnStart.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraRegister.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraTriggerZone.cs" />
     <Compile Include="Assets\Scripts\GeneralTriggerZone.cs" />
@@ -101,6 +107,7 @@
     <Compile Include="Assets\Scripts\MenuScript.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_HitPlayerInProximityState.cs" />
+    <Compile Include="Assets\KinectView\Scripts\DepthSourceManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_ExampleScript_01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMPro_InstructionOverlay.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexShakeB.cs" />
@@ -111,6 +118,7 @@
     <Compile Include="Assets\Scripts\StateMachine\SetBooleanBehaviour.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
+    <Compile Include="Assets\KinectView\Scripts\BodySourceView.cs" />
     <Compile Include="Assets\Art\Free Asset - 2D Handcrafted Art\Scripts\CamerController.cs" />
     <Compile Include="Assets\Scripts\Enemies\SpikeShooter\SpikeWindSectionScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexJitter.cs" />
@@ -134,8 +142,10 @@
     <Compile Include="Assets\Scripts\MovingPlatform.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_AwakenState.cs" />
+    <Compile Include="Assets\KinectView\Scripts\InfraredSourceManager.cs" />
     <Compile Include="Assets\Scripts\DestroyableObject.cs" />
     <Compile Include="Assets\Scripts\PuzzleTeleporter.cs" />
+    <Compile Include="Assets\KinectView\Scripts\ColorSourceView.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_AttackPlayerState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
   </ItemGroup>
@@ -1241,6 +1251,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{0888088C-FC9B-4DF2-5575-1051D95BC16F}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

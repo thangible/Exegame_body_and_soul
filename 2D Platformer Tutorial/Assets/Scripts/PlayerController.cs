@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Windows.Kinect; 
 
 // Based on https://www.youtube.com/watch?v=oxiPWg8cdRM&ab_channel=Chris%27Tutorials
 [RequireComponent(typeof(Rigidbody2D), typeof(TouchingDirections))]
@@ -93,6 +94,11 @@ public class PlayerController : MonoBehaviour
     private float original_jumpImpulse;
 
     private float original_gravityScale;
+
+        // Kinect variables
+    public BodySourceManager bodySourceManager;
+    private Body[] bodies;
+
 
     //private GameObject currentOneWayPlatform;
     //private float secondsToFallThroughPlatform = 0.25f;
@@ -341,6 +347,23 @@ public class PlayerController : MonoBehaviour
                 IsMoving = false;
             }
         }
+
+           // Kinect input handling
+        if (bodySourceManager != null)
+        {
+            bodies = bodySourceManager.GetData();
+            if (bodies != null)
+            {
+                foreach (var body in bodies)
+                {
+                    if (body != null && body.IsTracked)
+                    {
+                        HandleKinectGestures(body);
+                    }
+                }
+            }
+        }
+
     }
 
     private void FixedUpdate()
@@ -350,6 +373,7 @@ public class PlayerController : MonoBehaviour
         //rb.velocity = new Vector2(_moveVelocity.x, rb.velocity.y);
         //rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y); // * Time.fixedDeltaTime already handled by RigitBody
         rb.AddForce(CurrentMoveSpeed * Vector2.right, ForceMode2D.Force);
+
 
 
         // Jumping
@@ -973,8 +997,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
     public void PrepareForPuzzleSection()
     {
         // interrupt dash
@@ -1021,4 +1043,235 @@ public class PlayerController : MonoBehaviour
         canDash = true;
         canTakeFallDamage = true;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+// Handle attack directly
+    public void PerformAttack() 
+{
+    if (canAttack)
+    {
+        animator.SetTrigger(AnimationStrings.attack);
+        StartCoroutine(Attack());
+    }
+}
+
+// Handle jump directly
+public void PerformJump()
+{
+    jumpBufferTimer = 0f; // Simulate jump input delay
+
+    // Double Jump logic
+    if (jumpBufferTimer < jumpBufferTime && (IsJumping || _isJumpFalling) && (jumpCounter < 2 && timeSinceLastJump > doubleJumpCooldown && canDoubleJump))
+    {
+        InitializeJump(true);
+    }
+
+    // Normal Jump logic
+    if (jumpBufferTimer < jumpBufferTime && (!IsJumping && !_isJumpFalling) && (touchingDirections.IsGrounded || jumpCoyoteTimer < jumpCoyoteTime))
+    {
+        InitializeJump(false);
+    }
+}
+
+// Handle dash directly
+public void PerformDash()
+{
+    if (canDash)
+    {
+        StartCoroutine(Dash());
+    }
+}
+
+// Kinect gesture handling
+private void HandleKinectGestures(Body body)
+{
+    if (IsFistGesture(body, JointType.HandLeft))
+    {
+        // Move left
+        moveInput = Vector2.left;
+        SetFacingDirection(moveInput);
+    }
+    else if (IsFistGesture(body, JointType.HandRight))
+    {
+        // Move right
+        moveInput = Vector2.right;
+        SetFacingDirection(moveInput);
+    }
+    else
+    {
+        // Stop movement
+        moveInput = Vector2.zero;
+    }
+
+    // Jump gesture (head moving up significantly)
+    if (IsJumpGesture(body))
+    {
+        PerformJump(); // Trigger jump function
+    }
+
+    // Dash gesture (quick hand movement to other shoulder)
+    if (IsDashGesture(body))
+    {
+        PerformDash();
+    }
+
+    // Attack gesture (punch)
+    if (isAttackGesture(body))
+    {
+        PerformAttack();
+    }
+}
+
+private bool IsFistGesture(Body body, JointType hand)
+{
+    var handState = hand == JointType.HandLeft ? body.HandLeftState : body.HandRightState;
+    return handState == HandState.Closed;
+}
+
+private float initialHeadY;
+private float initialHeadTime;
+private float jumpDetectionThreshold = 0.1f;
+private float jumpDetectionTimeWindow = 0.2f;
+
+private void ResetJumpDetection()
+{
+    initialHeadY = 0f;
+    initialHeadTime = 0f;
+}
+
+private bool IsJumpGesture(Body body)
+{
+    var head = body.Joints[JointType.Head];
+
+    if (head.TrackingState != TrackingState.Tracked) {
+        ResetJumpDetection();
+        return false;
+    }
+
+    // Capture initial head position and time
+    if (initialHeadTime == 0f)
+    {
+        initialHeadY = head.Position.Y;
+        initialHeadTime = Time.time;
+        return false;
+    }
+
+    // Calculate the difference in head height
+    float verticalMovement = head.Position.Y - initialHeadY;
+
+    // Reset detection if the time window is exceeded
+    if (Time.time - initialHeadTime > jumpDetectionTimeWindow)
+    {
+        initialHeadY = head.Position.Y;
+        initialHeadTime = Time.time;
+        return false;
+    }
+
+    // Threshold adjusted to detect significant upward movement
+    if (verticalMovement > jumpDetectionThreshold)
+    {
+        ResetJumpDetection(); // Reset for next detection
+        return true;
+    }
+
+    return false;
+}
+private bool IsDashGesture(Body body)
+{
+     if (IsLeftArmTappingRightShoulder(body))
+    {
+        SetFacingDirection(Vector2.right);
+        return true;
+    }
+    else if (IsRightArmTappingLeftShoulder(body))
+    {
+        SetFacingDirection(Vector2.left);
+        return true;
+    }
+    return false;
+}
+
+
+    private float punchSpeedThreshold = 0.3f; 
+    private float punchDistanceThreshold = 0.08f; // Minimum distance the hand must travel towards the camera
+
+    private Vector3 previousRightHandPosition;
+    private Vector3 previousLeftHandPosition;
+
+private bool isAttackGesture(Body body)
+    {
+        var rightHand = body.Joints[JointType.HandRight];
+        var leftHand = body.Joints[JointType.HandLeft];
+
+        // Check if hands are tracked
+        if (rightHand.TrackingState == TrackingState.Tracked && leftHand.TrackingState == TrackingState.Tracked)
+        {
+            Vector3 rightHandPosition = GetVector3FromJoint(rightHand);
+            Vector3 leftHandPosition = GetVector3FromJoint(leftHand);
+
+            // Calculate hand speeds towards the camera (positive z-axis direction)
+            float rightHandSpeed = CalculateHandSpeed(rightHandPosition, previousRightHandPosition);
+            float leftHandSpeed = CalculateHandSpeed(leftHandPosition, previousLeftHandPosition);
+
+            // Calculate distance moved towards the camera
+            float rightHandDistance = rightHandPosition.z - previousRightHandPosition.z;
+            float leftHandDistance = leftHandPosition.z - previousLeftHandPosition.z;
+
+            // Update previous hand positions for next frame
+            previousRightHandPosition = rightHandPosition;
+            previousLeftHandPosition = leftHandPosition;
+
+            // Check if either hand is moving fast towards the camera and meets distance threshold
+            if ((rightHandSpeed > punchSpeedThreshold && rightHandDistance > punchDistanceThreshold) ||
+                (leftHandSpeed > punchSpeedThreshold && leftHandDistance > punchDistanceThreshold))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    float CalculateHandSpeed(Vector3 currentPos, Vector3 previousPos)
+    {
+        return Mathf.Abs((currentPos - previousPos).z) / Time.deltaTime;
+    }
+
+    Vector3 GetVector3FromJoint(Windows.Kinect.Joint joint)
+    {
+        return new Vector3(joint.Position.X, joint.Position.Y, joint.Position.Z);
+    }
+
+private bool IsLeftArmTappingRightShoulder(Body body)
+{
+    var leftHand = body.Joints[JointType.HandLeft];
+    var rightShoulder = body.Joints[JointType.ShoulderRight];
+
+    return leftHand.TrackingState == TrackingState.Tracked &&
+           rightShoulder.TrackingState == TrackingState.Tracked &&
+           Vector3.Distance(new Vector3(leftHand.Position.X, leftHand.Position.Y, leftHand.Position.Z),
+                            new Vector3(rightShoulder.Position.X, rightShoulder.Position.Y, rightShoulder.Position.Z)) < 0.15f;
+}
+
+private bool IsRightArmTappingLeftShoulder(Body body)
+{
+    var rightHand = body.Joints[JointType.HandRight];
+    var leftShoulder = body.Joints[JointType.ShoulderLeft];
+
+    return rightHand.TrackingState == TrackingState.Tracked &&
+           leftShoulder.TrackingState == TrackingState.Tracked &&
+           Vector3.Distance(new Vector3(rightHand.Position.X, rightHand.Position.Y, rightHand.Position.Z),
+                            new Vector3(leftShoulder.Position.X, leftShoulder.Position.Y, leftShoulder.Position.Z)) < 0.15f;
+}
+
 }
