@@ -18,6 +18,7 @@ public class GeneralTriggerZone : MonoBehaviour
     public UnityEvent onTriggerExitToRight;
 
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (alreadyEntered)
@@ -51,7 +52,6 @@ public class GeneralTriggerZone : MonoBehaviour
 
         if (!string.IsNullOrEmpty(collisionTag) && !collision.CompareTag(collisionTag))
             return;
-
 
         Vector2 playerPosition = collision.transform.position;
         Vector2 triggerPosition = transform.position;

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 7070332125690885659}
   - component: {fileID: 2055184615385836571}
   - component: {fileID: 8111537887898809010}
+  - component: {fileID: 6770395419816037}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -183,7 +184,7 @@ MonoBehaviour:
   jumpHangTimeGravityFactor: 1.7
   jumpFallTimeGravityFactor: 1.9
   doubleJumpCooldown: 0.2
-  maxDoubleJumpForceReduction: 2.2
+  maxDoubleJumpForceReduction: 3
   disableDoubleJumpThreshold: 18
   jumpBufferTime: 0.1
   jumpCoyoteTime: 0.3
@@ -196,6 +197,7 @@ MonoBehaviour:
   attackRange: 2
   attackDamage: 1
   attackCooldown: 0.6
+  bodySourceManager: {fileID: 6770395419816037}
   _isMoving: 0
   _isRunning: 0
   _isFacingRight: 1
@@ -411,8 +413,8 @@ MonoBehaviour:
     minNormalAngle: 0
     maxNormalAngle: 0
   groundDistance: 0.05
-  approachingGroundDistance: 2
-  wallDistance: 0.2
+  approachingGroundDistance: 1.5
+  wallDistance: 0.1
   ceilingDistance: 0.05
   rayCastOrigin: {fileID: 0}
   layerMask:
@@ -522,7 +524,7 @@ TrailRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: 0
+      m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
     numCornerVertices: 0
@@ -537,6 +539,18 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &6770395419816037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6037263784421728924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e74aed0503c9d24290a1ae5438fddc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7949464900817673828
 GameObject:
   m_ObjectHideFlags: 0

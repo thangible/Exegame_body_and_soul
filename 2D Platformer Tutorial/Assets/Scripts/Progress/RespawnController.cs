@@ -65,6 +65,8 @@ public class RespawnController : MonoBehaviour
         respawnPoint = newRespawnPoint;
     }
 
+
+
     public static void DestroyInstance()
     {
         if (instance != null)

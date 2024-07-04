@@ -1121,7 +1121,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.00010681, y: -160}
-  m_SizeDelta: {x: 1451.1133, y: 215.526}
+  m_SizeDelta: {x: 1000, y: 215.526}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3420730576114584416
 CanvasRenderer:
@@ -1174,7 +1174,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1163483620046055658}
+        m_TargetAssemblyTypeName: NoDestroy, Assembly-CSharp
+        m_MethodName: LoadCheckpointForSelectedLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3833593041286931846}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &4468391059435589333
 Animator:
   serializedVersion: 5
@@ -3854,7 +3878,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1163483620046055658}
+        m_TargetAssemblyTypeName: NoDestroy, Assembly-CSharp
+        m_MethodName: PlaySelectedLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3833593041286931846}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!95 &6804149867398886301
 Animator:
   serializedVersion: 5
@@ -5416,6 +5464,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc45a9e9c4cb15643aa4bdf19f1e1c54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  firstMenu: {fileID: 0}
+  loadLevelText: {fileID: 0}
+  levelTimeText: {fileID: 0}
+  levelFirstTimeText: {fileID: 0}
+  levelSecondTimeText: {fileID: 0}
+  levelThirdTimeText: {fileID: 0}
+  historyScrollViewContent: {fileID: 0}
+  historyItemPrefab: {fileID: 0}
 --- !u!1 &8136388679854990518
 GameObject:
   m_ObjectHideFlags: 0

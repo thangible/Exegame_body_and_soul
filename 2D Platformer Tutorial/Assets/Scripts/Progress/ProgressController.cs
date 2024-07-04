@@ -1,6 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using static Cinemachine.DocumentationSortingAttribute;
+using static UnityEngine.Rendering.DebugUI;
 
 // control milestones in the level progress --> put on main camera
 public class ProgressController : MonoBehaviour
@@ -8,6 +13,11 @@ public class ProgressController : MonoBehaviour
     public static ProgressController instance;
 
     public float levelTimer = 0f;
+    public float finalLevelTime;
+
+    public Text currentLevelTimeText;
+    public Text finalLevelTimeText;
+
 
     // Level 1
     public bool hasPickedUpAttack = false;
@@ -31,6 +41,7 @@ public class ProgressController : MonoBehaviour
     private void Update()
     {
         levelTimer += Time.deltaTime;
+        UpdateCurrentLevelTime();
     }
 
 
@@ -97,6 +108,56 @@ public class ProgressController : MonoBehaviour
     public bool HasOvercomeLastFallingPlatforms()
     {
         return hasOvercomeLastFallingPlatforms;
+    }
+
+    private void UpdateCurrentLevelTime()
+    {
+        if (currentLevelTimeText != null)
+        {
+            currentLevelTimeText.text = "Time: " + levelTimer.ToString("F2") + "s";
+        }
+    }
+
+    private void UpdateFinalLevelTime()
+    {
+        if (finalLevelTimeText != null)
+        {
+            finalLevelTimeText.text = "Time: " + finalLevelTime.ToString("F2") + "s";
+        }
+    }
+
+    
+    // unnecessary, just to be formal
+    public void ResetProgress(int level)
+    {
+        finalLevelTime = levelTimer;
+        UpdateFinalLevelTime();
+
+        /*
+        if (level == 1)
+        {
+            hasPickedUpAttack = false;
+        }
+
+        if (level == 2)
+        {
+            hasSolvedPuzzle = false;
+            hasOvercomeFirstFallingPlatforms = false;
+            hasOvercomeLastFallingPlatforms = false;
+            hasDefeatedFlyingEnemy = false;
+        }*/
+    }
+
+    public void PlayAgain()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.buildIndex, LoadSceneMode.Single);
+    }
+
+
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadSceneAsync(0);
     }
 
 }
