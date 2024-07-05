@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    public static SoundManager Instance;
+    public static SoundManager instance;
 
     [SerializeField]
     private SoundLibrary sfxLibrary;
@@ -15,13 +15,13 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        if (instance != null)
         {
             Destroy(gameObject);
         }
         else
         {
-            Instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
     }
@@ -39,8 +39,8 @@ public class SoundManager : MonoBehaviour
         PlaySound3D(sfxLibrary.GetClipFromName(soundName), pos);
     }
 
-    public void PlaySound2D(string soundName)
+    public void PlaySound2D(string soundName, float volume = 1.0f)
     {
-        sfx2DSource.PlayOneShot(sfxLibrary.GetClipFromName(soundName));
+        sfx2DSource.PlayOneShot(sfxLibrary.GetClipFromName(soundName), volume);
     }
 }

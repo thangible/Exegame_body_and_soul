@@ -95,8 +95,9 @@ public class PlayerController : MonoBehaviour
 
     private float original_gravityScale;
 
-        // Kinect variables
-    public BodySourceManager bodySourceManager;
+    // Kinect variables
+    //public BodySourceManager bodySourceManager;
+    public GameObject bodySourceManager = null;
     private Body[] bodies;
 
 
@@ -348,10 +349,10 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-           // Kinect input handling
+        // Kinect input handling
         if (bodySourceManager != null)
         {
-            bodies = bodySourceManager.GetData();
+            //bodies = bodySourceManager.GetData(); // TODO UNCOMMENT
             if (bodies != null)
             {
                 foreach (var body in bodies)
@@ -668,6 +669,7 @@ public class PlayerController : MonoBehaviour
 
         //rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
         rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y + ((force + (0.5f * Time.fixedDeltaTime * -jumpGravityCompensationFactor)) / rb.mass));
+        SoundManager.instance.PlaySound3D("Jump", transform.position);
         //rb.velocity = new Vector2(rb.velocity.x, jumpImpulse);
     }
 
@@ -782,6 +784,7 @@ public class PlayerController : MonoBehaviour
             float currentImpulse = burstImpulse;
             bool burstActive = true;
 
+            SoundManager.instance.PlaySound3D("Dash", transform.position);
 
             Vector2 previousPosition = rb.position;
             while (Vector2.Distance(rb.position, targetPosition) > 0.1f)
@@ -896,6 +899,8 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Attack()
     {
         canAttack = false;
+
+        SoundManager.instance.PlaySound3D("Attack", transform.position);
 
         Vector2 attackDirection = IsFacingRight ? Vector2.right : Vector2.left;
         Vector2 attackPosition = (Vector2)transform.position + attackDirection * attackRange;

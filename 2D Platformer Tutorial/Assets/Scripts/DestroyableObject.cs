@@ -37,6 +37,7 @@ public class DestroyableObject : MonoBehaviour
         {
             Instantiate(destructionEffect, transform.position, Quaternion.identity);
         }
+        SoundManager.instance.PlaySound3D("Destroy", transform.position);
 
         Destroy(gameObject);
     }

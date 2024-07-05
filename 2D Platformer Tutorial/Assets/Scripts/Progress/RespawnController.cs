@@ -79,6 +79,7 @@ public class RespawnController : MonoBehaviour
     public void AnnouncePlayerDeath(bool isPlayerDead = true)
     {
         isPlayerAlive = !isPlayerDead;
+        SoundManager.instance.PlaySound2D("Death", volume: 1f);
 
         if (isPlayerDead)
         {

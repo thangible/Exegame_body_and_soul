@@ -57,6 +57,7 @@ public class NoDestroy : MonoBehaviour
         if (scene.buildIndex == 0)
         {
             firstMenu.SetActive(true);
+            MusicManager.instance.PlayMusic("MainMenu", fadeDuration: 1f);
         }
     }
 
@@ -72,6 +73,8 @@ public class NoDestroy : MonoBehaviour
                 // Settings
                 UpdateSettings(player);
             }
+
+            PlayGameMusic(index);
         };
     }
 
@@ -111,8 +114,33 @@ public class NoDestroy : MonoBehaviour
                 // Settings
                 UpdateSettings(player);
             }
+
+            PlayGameMusic(_selectedLevel);
         };
     }
+
+
+    private void PlayGameMusic(int sceneIndex)
+    {
+        if (sceneIndex == 1)
+        {
+
+            MusicManager.instance.PlayMusic("Level1");
+        }
+        else if (sceneIndex == 2)
+        {
+            if (!ProgressController.instance.hasDefeatedFlyingEnemy)
+            {
+                MusicManager.instance.PlayMusic("Level2");
+            }
+            else
+            {
+                MusicManager.instance.PlayMusic("Level2_PostBoss", fadeDuration: 1f);
+            }
+        }
+    }
+
+
 
     public void LoadCheckpointForSelectedLevel()
     {
@@ -136,6 +164,8 @@ public class NoDestroy : MonoBehaviour
 
             // Settings
             UpdateSettings(player);
+
+            PlayGameMusic(_selectedLevel);
         }
         else
         {

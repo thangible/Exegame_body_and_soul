@@ -383,6 +383,7 @@ public class FlyingBoss : MonoBehaviour
         {
             if (!awakenStateStarted)
             {
+                MusicManager.instance.PlayMusic("Level2_Boss", fadeDuration: 0.5f);
                 awakenStateStarted = true;
             }
 
@@ -1205,6 +1206,7 @@ public class FlyingBoss : MonoBehaviour
         if (hits >= bossHitpoints)
         {
             ProgressController.instance.SetFlyingEnemyDefeated();
+            MusicManager.instance.PlayMusic("Level2_PostBoss", fadeDuration: 1f);
             gameObject.SetActive(false);
 
             foreach (var obj in objectsToDisableAfterBossFight)

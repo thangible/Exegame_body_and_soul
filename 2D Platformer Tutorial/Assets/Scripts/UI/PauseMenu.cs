@@ -32,6 +32,8 @@ public class PauseMenu : MonoBehaviour
 
     void Pause()
     {
+        print("PAUSE");
+        MusicManager.instance.LowerMusicVolume(1f);
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         SetAnimatorUpdateMode(AnimatorUpdateMode.UnscaledTime);
@@ -40,6 +42,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
+        print("RES");
+        MusicManager.instance.RaiseMusicVolume(1f);
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         SetAnimatorUpdateMode(AnimatorUpdateMode.Normal);

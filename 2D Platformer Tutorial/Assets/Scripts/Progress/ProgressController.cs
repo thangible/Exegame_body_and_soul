@@ -158,6 +158,19 @@ public class ProgressController : MonoBehaviour
     public void LoadMainMenu()
     {
         SceneManager.LoadSceneAsync(0);
+        MusicManager.instance.PlayMusic("MainMenu", fadeDuration: 1f);
+    }
+
+
+
+    public void PlayMusic(string trackName)
+    {
+        MusicManager.instance.PlayMusic(trackName, fadeDuration: 2f);
+    }
+
+    public void PlayFinishMenuMusic()
+    {
+        MusicManager.instance.PlayMusic("FinishMenu", fadeDuration: 0.3f);
     }
 
 }
