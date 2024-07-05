@@ -1,0 +1,24 @@
+https://stackoverflow.com/questions/72610494/what-is-the-difference-between-git-lfs-fetch-git-lfs-fetch-all-and-git
+
+- git checkout branch
+- git lfs fetch
+and/or
+- git lfs fetch --all
+
+or
+
+- git checkout branch
+- git pull
+- git lfs pull
+git pull
+
+then
+
+git lfs checkout
+
+
+
+
+
+
+
