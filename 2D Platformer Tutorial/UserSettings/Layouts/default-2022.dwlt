@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1706.6667
     height: 869.3334
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Project
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 100}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 124
+  controlID: 134
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -441,9 +441,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 66e20000
+      m_SelectedIDs: c27f0100
       m_LastClickedID: 0
-      m_ExpandedIDs: aed4ffffdcd5ffff0ad7ffffbcd9ffffd8fafffffafaffff
+      m_ExpandedIDs: ca3afeff6040feff1c46feff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1920,9 +1920,9 @@ MonoBehaviour:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 134.33331}
-    m_SelectedIDs: 48e40000
-    m_LastClickedID: 58440
-    m_ExpandedIDs: 0000000046e4000048e400004ae400004ce400004ee4000050e4000052e4000054e4000056e4000058e400005ae400005ce400005ee4000060e4000062e4000064e4000066e4000068e400006ae400006ce400006ee4000070e4000000ca9a3b
+    m_SelectedIDs: 92810100
+    m_LastClickedID: 98706
+    m_ExpandedIDs: 0000000090810100928101009481010096810100988101009a8101009c8101009e810100a0810100a2810100a4810100a6810100a8810100aa810100ac810100ae810100b0810100b2810100b4810100b6810100b8810100ba81010000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1950,7 +1950,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000046e4000048e400004ae400004ce400004ee4000050e4000052e4000054e4000056e4000058e400005ae400005ce400005ee4000060e4000062e4000064e4000066e4000068e400006ae400006ce400006ee4000070e40000
+    m_ExpandedIDs: 0000000090810100928101009481010096810100988101009a8101009c8101009e810100a0810100a2810100a4810100a6810100a8810100aa810100ac810100ae810100b0810100b2810100b4810100b6810100b8810100ba810100
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
