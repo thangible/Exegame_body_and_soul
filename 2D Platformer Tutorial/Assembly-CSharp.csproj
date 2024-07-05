@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Enemies\SpikeShooter\SpikeShooter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\EnvMapAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\SlowProjectileScript.cs" />
+    <Compile Include="Assets\Scripts\Audio\SoundLibrary.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
     <Compile Include="Assets\Scripts\Characters\AnimationStrings.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshProFloatingText.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_SlowRangedAttackState.cs" />
+    <Compile Include="Assets\Scripts\Audio\SoundManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_AwakenState.cs" />
     <Compile Include="Assets\Scripts\OLDMenuScript.cs" />
