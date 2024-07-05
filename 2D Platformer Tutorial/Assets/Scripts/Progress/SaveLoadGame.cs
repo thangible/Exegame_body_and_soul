@@ -114,8 +114,6 @@ public class SaveLoadGame : MonoBehaviour
 
             // Settings
             int inputMethod = PlayerPrefs.GetInt("input", -1);
-            print("load");
-            print(inputMethod);
             PlayerInput playerInput = player.GetComponent<PlayerInput>();
 
             if (inputMethod == -1 || inputMethod == 0)

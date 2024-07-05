@@ -12,8 +12,8 @@ public class ProgressController : MonoBehaviour
 {
     public static ProgressController instance;
 
-    public float levelTimer = 0f;
-    public float finalLevelTime;
+    private float levelTimer = 0f;
+    private float finalLevelTime;
 
     public Text currentLevelTimeText;
     public Text finalLevelTimeText;
