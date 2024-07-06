@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // Create new objects on player death
@@ -8,22 +9,37 @@ public class ObjectInstantiator : MonoBehaviour
 
     public bool isPrefab = true;
     public bool instantiateByDefault = true;
+    private float initDelay = 2f;
     private bool nonDefaultInstantiationComplete = false;
+
     public string objectTag = ""; // in case its not a prefab, destroy all other objects with this tag
 
 
     void Start()
     {
+        StartCoroutine(DelayedInitialization());
+    }
+
+    IEnumerator DelayedInitialization()
+    {
+        yield return new WaitForEndOfFrame();
+
         if (!isPrefab)
         {
             DestroyOtherInstancesWithTag();
         }
 
+        yield return new WaitForSeconds(initDelay);
+
         if (instantiateByDefault)
         {
-            InstantiateNewObject();
+            if (ShouldObjectRespawn()) // NEWLY ADDED TODO KEEP?
+            {
+                InstantiateNewObject();
+            } 
         }
     }
+
 
     void Update()
     {
@@ -105,6 +121,12 @@ public class ObjectInstantiator : MonoBehaviour
             // dont spawn new puzzle finished barrier
             return false;
         }
+        else if (objectTag == "AttackCollectable" && ProgressController.instance.HasPickedUpAttack())
+        {
+            // dont spawn new attack collectable
+            return false;
+        }
+
         return true;
     }
 

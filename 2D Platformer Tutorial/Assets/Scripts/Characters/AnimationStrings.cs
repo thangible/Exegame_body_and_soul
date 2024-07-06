@@ -12,6 +12,7 @@ public class AnimationStrings : MonoBehaviour
     internal static string canMove = "canMove";
 
     internal static string isGrounded = "isGrounded";
+    internal static string isApproachingGrounded = "isApproachingGrounded";
     internal static string yVelocity = "yVelocity"; // for falling
     internal static string impactAfterFalling = "impactAfterFalling";
     internal static string impactAfterJumpFalling = "impactAfterJumpFalling";

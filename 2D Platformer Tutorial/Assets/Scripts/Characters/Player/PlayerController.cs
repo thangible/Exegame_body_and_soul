@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput; // movement input
     private float stopMovementTolerance = 0.05f;
     private float stopMovementToleranceTimer = 0f;
+    public float baseDownForceMagnitude = 30f;
+    public float maxDownForceMagnitude = 60f;
 
 
     [Header("Run")]
@@ -57,7 +59,7 @@ public class PlayerController : MonoBehaviour
 
     // Fall damage
     public float fallDamageThreshold = 15f; // falling speed threshhold; not distance
-    public float fallDamageAfterJumpingThreshold = 5f;
+    public float fallDamageAfterJumpingThreshold = 20f;
     public float fallingGravityFactor = 1.2f;
     private float timeSinceLastFallCompleted = 0f;
     private bool playerDiesFromFallDamage = false;
@@ -78,6 +80,7 @@ public class PlayerController : MonoBehaviour
     public int attackDamage = 1;
     public float attackCooldown = 0.6f;
     private bool canAttack = true;
+    private bool attackDisabled = true;
     private string destroyableObjectTag = "DestroyableObject";
     private string hostileObjectTag = "Hostile";
 
@@ -335,6 +338,16 @@ public class PlayerController : MonoBehaviour
         dashingTimer += Time.deltaTime;
 
 
+        // Disable/Enable Attack
+        if (!ProgressController.instance.HasPickedUpAttack())
+        {
+            attackDisabled = true;
+        } else
+        {
+            attackDisabled = false;
+        }
+
+
         // Set movement boolean with tolerance (to stop quick switch to idle mode when changing direction)
         if (moveInput != Vector2.zero)
         {
@@ -367,6 +380,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
     private void FixedUpdate()
     {
         // Movement on x
@@ -375,6 +389,18 @@ public class PlayerController : MonoBehaviour
         //rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y); // * Time.fixedDeltaTime already handled by RigitBody
         rb.AddForce(CurrentMoveSpeed * Vector2.right, ForceMode2D.Force);
 
+        if (touchingDirections.IsGrounded || touchingDirections.IsApproachingGrounded)
+        {
+            float currentXSpeed = Mathf.Abs(rb.velocity.x);
+            float downForceMagnitude = baseDownForceMagnitude + (currentXSpeed / maxRunSpeed) * (maxDownForceMagnitude - baseDownForceMagnitude);
+            //print(downForceMagnitude);
+
+            if (!IsJumping && !_isJumpFalling)
+            {
+                rb.AddForce(Vector2.down * downForceMagnitude, ForceMode2D.Force);
+                animator.SetFloat(AnimationStrings.yVelocity, 0);
+            }
+        }
 
 
         // Jumping
@@ -407,7 +433,10 @@ public class PlayerController : MonoBehaviour
 
 
         // track falling state
-        animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+        if (!touchingDirections.IsApproachingGrounded)
+        {
+            animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+        }
 
         // apply fall damage
         HandleFall();
@@ -493,26 +522,24 @@ public class PlayerController : MonoBehaviour
 
                 }
             }
-            
+        }
 
+        if (touchingDirections.IsGrounded && playerDiesFromFallDamage)
+        {
             // check for collisions below the player
             float distanceToGround = (playerCollider.size.y) + 0.1f;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround, layerMask);
-            //Debug.DrawRay(transform.position, Vector2.down * distanceToGround, Color.red);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround, touchingDirections.groundLayerMask);
 
             if (hit.collider != null)
             {
                 if (hit.collider.CompareTag(noFallDamageObjectTag))
                 {
                     landedOnNoFallDamageObject = true;
-
                 }
             }
-        }
 
-        if (touchingDirections.IsGrounded && playerDiesFromFallDamage)
-        {
-            if(!landedOnNoFallDamageObject)
+            print("PLAYER WILL DIE!");
+            if (!landedOnNoFallDamageObject)
             {
                 RespawnController.instance.AnnouncePlayerDeath();
             }
@@ -689,7 +716,7 @@ public class PlayerController : MonoBehaviour
             timeSinceLastJumpCompleted = 0f;
 
             //if (!touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling)
-            //print("hit the ground after JUMP falling");
+            print("hit the ground after JUMP falling");
             animator.SetTrigger(AnimationStrings.impactAfterJumpFalling);
 
             if (!disabledDoubleJump)
@@ -720,7 +747,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -maxFallSpeed));
 
             // disable double jump when too close to ground
-            if (touchingDirections.IsApproachingGround && !touchingDirections.IsGrounded) // fixed double jump disabled right before hitting ground
+            if (touchingDirections.IsApproachingGrounded && !touchingDirections.IsGrounded) // fixed double jump disabled right before hitting ground
             {
                 canDoubleJump = false;
             }
@@ -889,7 +916,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started && canAttack)
+        if (context.started && canAttack && !attackDisabled)
         {
             animator.SetTrigger(AnimationStrings.attack);
             StartCoroutine(Attack());
@@ -1073,12 +1100,14 @@ public class PlayerController : MonoBehaviour
 // Handle attack directly
     public void PerformAttack() 
 {
-    if (canAttack)
+    if (canAttack && !attackDisabled)
     {
         animator.SetTrigger(AnimationStrings.attack);
         StartCoroutine(Attack());
     }
 }
+
+
 
 // Handle jump directly
 public void PerformJump()

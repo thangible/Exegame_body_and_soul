@@ -131,6 +131,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Scripts\Objects\PuzzlePlatform.cs" />
     <Compile Include="Assets\Scripts\Parallax\ParallaxLayer.cs.cs" />
+    <Compile Include="Assets\Scripts\Collectable.cs" />
     <Compile Include="Assets\Scripts\Characters\Player\TouchingDirections.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />

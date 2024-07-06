@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using static Cinemachine.DocumentationSortingAttribute;
 using System.Runtime.ExceptionServices;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 
 // Script for menu canvas
 public class NoDestroy : MonoBehaviour

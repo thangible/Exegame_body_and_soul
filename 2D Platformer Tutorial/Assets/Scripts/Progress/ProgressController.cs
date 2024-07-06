@@ -33,10 +33,28 @@ public class ProgressController : MonoBehaviour
 
 
 
+    
     private void Awake()
     {
         instance = this;
     }
+    
+
+    /*
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+    */
+
 
     private void Update()
     {
@@ -146,9 +164,9 @@ public class ProgressController : MonoBehaviour
             hasOvercomeLastFallingPlatforms = false;
             hasDefeatedFlyingEnemy = false;
         }*/
-    }
+}
 
-    public void PlayAgain()
+public void PlayAgain()
     {
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex, LoadSceneMode.Single);
@@ -159,8 +177,18 @@ public class ProgressController : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(0);
         MusicManager.instance.PlayMusic("MainMenu", fadeDuration: 1f);
+
+        //DestroyCamera();
     }
 
+    void DestroyCamera()
+    {
+        GameObject mainCamera = GameObject.FindWithTag("MainCamera");
+        if (mainCamera != null)
+        {
+            Destroy(mainCamera);
+        }
+    }
 
 
     public void PlayMusic(string trackName)
