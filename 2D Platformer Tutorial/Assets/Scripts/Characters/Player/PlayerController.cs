@@ -402,6 +402,12 @@ public class PlayerController : MonoBehaviour
         }
 
 
+        // disable double jump
+        if (IsFalling && Mathf.Abs(rb.velocity.y) > disableDoubleJumpThreshold)
+        {
+            canDoubleJump = false; // disable double jump
+        }
+
         // Jumping
         if (jumpBufferTimer < jumpBufferTime && (!IsJumping && !_isJumpFalling) && (touchingDirections.IsGrounded || jumpCoyoteTimer < jumpCoyoteTime))
         {
@@ -414,12 +420,6 @@ public class PlayerController : MonoBehaviour
         }
 
         HandleJumpState();
-
-        // disable double jump
-        if (IsFalling && Mathf.Abs(rb.velocity.y) > disableDoubleJumpThreshold)
-        {
-            canDoubleJump = false; // disable double jump
-        }
 
 
         // Dashing

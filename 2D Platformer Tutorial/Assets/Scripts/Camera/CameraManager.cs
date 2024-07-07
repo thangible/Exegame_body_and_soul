@@ -10,48 +10,38 @@ public class CameraManager : MonoBehaviour
 {
     //public static CameraManager instance;
 
-    static List<CinemachineVirtualCamera> cameras = new List<CinemachineVirtualCamera>();
+    private static Dictionary<string, CinemachineVirtualCamera> cameras = new Dictionary<string, CinemachineVirtualCamera>();
 
     public static CinemachineVirtualCamera ActiveCamera = null;
 
 
-    public static int GetActiveCamera()
+    public static string GetActiveCamera()
     {
-        /*
-        if (ActiveCamera == null)
+        foreach (var camera in cameras.Values)
         {
-            return ActiveCamera;
-        }*/
-
-        for (int i = 0; i < cameras.Count; i++)
-        {
-            if (cameras[i].Priority == 10)
+            if (camera.Priority == 10)
             {
-                return i;
+                return camera.gameObject.name;
             }
         }
 
-        return -1;
+        return null;
     }
 
-    public static void SetActiveCamera(int idx)
+    public static void SetActiveCamera(string cameraName)
     {
-        /*
-        if (ActiveCamera == null)
+        foreach (var pair in cameras)
         {
-            return ActiveCamera;
-        }*/
+            CinemachineVirtualCamera cam = pair.Value;
 
-        for (int i = 0; i < cameras.Count; i++)
-        {
-            if (i == idx)
+            if (cam.gameObject.name == cameraName)
             {
-                cameras[i].Priority = 10;
-                ActiveCamera = cameras[i];
-            } 
+                cam.Priority = 10;
+                ActiveCamera = cam;
+            }
             else
             {
-                cameras[i].Priority = 0;
+                cam.Priority = 0;
             }
         }
     }
@@ -64,7 +54,7 @@ public class CameraManager : MonoBehaviour
 
     public static void SwitchCamera(CinemachineVirtualCamera newCamera)
     {
-        foreach (CinemachineVirtualCamera cam in cameras)
+        foreach (var cam in cameras.Values)
         {
             if (cam == newCamera)
             {
@@ -90,7 +80,7 @@ public class CameraManager : MonoBehaviour
         int highestPriority = int.MinValue;
 
         // get highest prio cam
-        foreach (var cam in cameras)
+        foreach (var cam in cameras.Values)
         {
             if (cam.Priority > highestPriority)
             {
@@ -136,11 +126,11 @@ public class CameraManager : MonoBehaviour
 
     public static void Register(CinemachineVirtualCamera camera)
     {
-        cameras.Add(camera);
+        cameras[camera.gameObject.name] = camera;
     }
 
     public static void Unregister(CinemachineVirtualCamera camera)
     {
-        cameras.Remove(camera);
+        cameras.Remove(camera.gameObject.name);
     }
 }

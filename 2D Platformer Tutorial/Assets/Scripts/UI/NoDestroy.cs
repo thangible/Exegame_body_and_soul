@@ -9,6 +9,7 @@ using System.Runtime.ExceptionServices;
 using UnityEngine.InputSystem;
 using static UnityEngine.Rendering.DebugUI;
 using UnityEngine.Audio;
+using UnityEngine.UIElements;
 
 
 // Script for menu canvas
@@ -21,9 +22,16 @@ public class NoDestroy : MonoBehaviour
 
     public GameObject firstMenu;
 
+    public GameObject kinectButtonActive;
+    public GameObject kinectButtonInactive;
+    public GameObject keyboardButtonActive;
+    public GameObject keyboardButtonInactive;
+
     public AudioMixer audioMixer;
-    public Slider musicSlider;
-    public Slider sfxSlider;
+    public UnityEngine.UI.Slider musicSlider;
+    public UnityEngine.UI.Slider sfxSlider;
+
+    public GameObject transitionsContainer;
 
     public Text loadLevelText;
     public Text levelTimeText;
@@ -82,17 +90,9 @@ public class NoDestroy : MonoBehaviour
     public void PlayGame(int index)
     {
         //SceneManager.LoadSceneAsync(index);
-        LevelManager.Instance.LoadScene(index);
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            // Settings
-            UpdateSettings(player);
-        }
 
-        PlayGameMusic(index);
+        transitionsContainer.SetActive(true);
 
-        /*
         SceneManager.LoadSceneAsync(index).completed += (AsyncOperation asyncOperation) =>
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -102,9 +102,11 @@ public class NoDestroy : MonoBehaviour
                 UpdateSettings(player);
             }
 
+            transitionsContainer.SetActive(false);
+
             PlayGameMusic(index);
         };
-        */
+        
     }
 
 
@@ -118,18 +120,9 @@ public class NoDestroy : MonoBehaviour
     public void PlaySelectedLevel()
     {
         //SceneManager.LoadSceneAsync(_selectedLevel);
-        LevelManager.Instance.LoadScene(_selectedLevel);
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-        {
-            // Settings
-            UpdateSettings(player);
-        }
 
-        PlayGameMusic(_selectedLevel);
-
-
-        /*
+        transitionsContainer.SetActive(true);
+        
         SceneManager.LoadSceneAsync(_selectedLevel).completed += (AsyncOperation asyncOperation) =>
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -139,9 +132,11 @@ public class NoDestroy : MonoBehaviour
                 UpdateSettings(player);
             }
 
+            transitionsContainer.SetActive(false);
+
             PlayGameMusic(_selectedLevel);
         };
-        */
+        
     }
 
 
@@ -169,7 +164,9 @@ public class NoDestroy : MonoBehaviour
             PlayGameMusic(_selectedLevel);
             */
 
-            
+
+            transitionsContainer.SetActive(true);
+
             AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(_selectedLevel);
             while (!asyncLoad.isDone)
             {
@@ -181,6 +178,8 @@ public class NoDestroy : MonoBehaviour
 
             // Settings
             UpdateSettings(player);
+
+            transitionsContainer.SetActive(false);
 
             PlayGameMusic(_selectedLevel);
         }
@@ -274,8 +273,13 @@ public class NoDestroy : MonoBehaviour
 
 
             // Camera
-            int cameraNumber = PlayerPrefs.GetInt("cameraNumber_" + level);
-            CameraManager.SetActiveCamera(cameraNumber);
+            string cameraName = PlayerPrefs.GetString("cameraName_" + level, null);
+            if (cameraName != null)
+            {
+                CameraManager.SetActiveCamera(cameraName);
+            }
+            print("LOAD nd");
+            print(cameraName);
 
 
             // Progress
@@ -364,6 +368,23 @@ public class NoDestroy : MonoBehaviour
         PlayerPrefs.Save();
     }
 
+    public void ActivateControlsButtons()
+    {
+        if (PlayerPrefs.GetInt("input", -1) == 0) // keyboard
+        {
+            kinectButtonActive.SetActive(false);
+            kinectButtonInactive.SetActive(true);
+            keyboardButtonActive.SetActive(true);
+            keyboardButtonInactive.SetActive(false);
+        } 
+        else if (PlayerPrefs.GetInt("input", -1) == 1) // kinect
+        {
+            kinectButtonActive.SetActive(true);
+            kinectButtonInactive.SetActive(false);
+            keyboardButtonActive.SetActive(false);
+            keyboardButtonInactive.SetActive(true);
+        }
+    }
 
 
     public void DeleteAllScores()

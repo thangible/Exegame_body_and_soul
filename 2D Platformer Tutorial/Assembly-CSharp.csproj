@@ -77,14 +77,13 @@
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\QuickProjectileScript.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark04.cs" />
-    <Compile Include="Assets\Scripts\Progress\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Enemies\LaserShooter\LaserShooter.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ChatController.cs" />
+    <Compile Include="Assets\Scripts\Objects\WindArea.cs" />
     <Compile Include="Assets\Scripts\Enemies\SpikeShooter\SpikeParkourSectionScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_DigitValidator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_FrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Objects\JumpPad.cs" />
-    <Compile Include="Assets\Scripts\ObjectInstantiator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
@@ -99,7 +98,6 @@
     <Compile Include="Assets\Scripts\Camera\CameraRegister.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraTriggerZone.cs" />
     <Compile Include="Assets\Scripts\Objects\FallingPlatform.cs" />
-    <Compile Include="Assets\Scripts\GeneralTriggerZone.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_IdleState.cs" />
     <Compile Include="Assets\Scripts\Objects\MovingPlatform.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss.cs" />
@@ -111,7 +109,9 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexColorCycler.cs" />
     <Compile Include="Assets\Scripts\Objects\PuzzleTeleporter.cs" />
     <Compile Include="Assets\Scripts\Camera\CoroutineRunner.cs" />
+    <Compile Include="Assets\Scripts\Objects\Collectable.cs" />
     <Compile Include="Assets\Scripts\StateMachine\SetBooleanBehaviour.cs" />
+    <Compile Include="Assets\Scripts\Objects\DestroyableObject.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ObjectSpin.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_PhoneNumberValidator.cs" />
     <Compile Include="Assets\Art\Free Asset - 2D Handcrafted Art\Scripts\CamerController.cs" />
@@ -121,8 +121,8 @@
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\QuickProjectileCollisionCourseScript.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextConsoleSimulator.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TeleType.cs" />
-    <Compile Include="Assets\Scripts\WindArea.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextEventCheck.cs" />
+    <Compile Include="Assets\Scripts\Utility\StartAnimationAtRandomFrame.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_UiFrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Audio\MusicManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\VertexZoom.cs" />
@@ -131,7 +131,6 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_B.cs" />
     <Compile Include="Assets\Scripts\Objects\PuzzlePlatform.cs" />
     <Compile Include="Assets\Scripts\Parallax\ParallaxLayer.cs.cs" />
-    <Compile Include="Assets\Scripts\Collectable.cs" />
     <Compile Include="Assets\Scripts\Characters\Player\TouchingDirections.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\SkewTextExample.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\WarpTextExample.cs" />
@@ -140,9 +139,9 @@
     <Compile Include="Assets\Scripts\Audio\SoundManager.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\ShaderPropAnimator.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_AwakenState.cs" />
-    <Compile Include="Assets\Scripts\OLDMenuScript.cs" />
     <Compile Include="Assets\Scripts\UI\PauseMenu.cs" />
-    <Compile Include="Assets\Scripts\DestroyableObject.cs" />
+    <Compile Include="Assets\Scripts\Objects\ObjectInstantiator.cs" />
+    <Compile Include="Assets\Scripts\Utility\GeneralTriggerZone.cs" />
     <Compile Include="Assets\Scripts\Enemies\FlyingBoss\FlyingBoss_AttackPlayerState.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextInfoDebugTool.cs" />
   </ItemGroup>

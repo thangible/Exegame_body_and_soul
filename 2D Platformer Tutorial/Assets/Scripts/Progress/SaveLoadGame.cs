@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class SaveLoadGame : MonoBehaviour
 {
@@ -26,8 +27,13 @@ public class SaveLoadGame : MonoBehaviour
 
 
             // Camera
-            int cameraNumber = CameraManager.GetActiveCamera();
-            PlayerPrefs.SetInt("cameraNumber_" + level, cameraNumber);
+            string cameraName = CameraManager.GetActiveCamera();
+            if (cameraName != null)
+            {
+                PlayerPrefs.SetString("cameraName_" + level, cameraName);
+            }
+            print("SAVE sl");
+            print(PlayerPrefs.GetString("cameraName_" + level));
 
 
             // Progress
@@ -127,8 +133,13 @@ public class SaveLoadGame : MonoBehaviour
 
 
             // Camera
-            int cameraNumber = PlayerPrefs.GetInt("cameraNumber_" + level);
-            CameraManager.SetActiveCamera(cameraNumber);
+            string cameraName = PlayerPrefs.GetString("cameraName_" + level, null);
+            if (cameraName != null)
+            {
+                CameraManager.SetActiveCamera(cameraName);
+            }
+            print("LOAD sl");
+            print(cameraName);
 
 
             // Progress

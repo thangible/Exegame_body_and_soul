@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -35,8 +36,17 @@ public class PauseMenu : MonoBehaviour
 
     void Pause()
     {
-        audioMixer.SetFloat("MusicVolume", PlayerPrefs.GetFloat("MusicVolume") / 2);
-        audioMixer.SetFloat("SFXVolume", PlayerPrefs.GetFloat("SFXVolume") / 2);
+        //return Mathf.Lerp(-80f, 0f, value);
+        if (PlayerPrefs.GetFloat("MusicVolume", -100) > -60f && PlayerPrefs.GetFloat("MusicVolume", -100) <= 0)
+        {
+            audioMixer.SetFloat("MusicVolume", PlayerPrefs.GetFloat("MusicVolume") * 1.4f);
+        }
+
+        if (PlayerPrefs.GetFloat("SFXVolume", -100) > -60f && PlayerPrefs.GetFloat("SFXVolume", -100) <= 0)
+        {
+            audioMixer.SetFloat("SFXVolume", PlayerPrefs.GetFloat("SFXVolume") * 1.3f);
+        }
+
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         SetAnimatorUpdateMode(AnimatorUpdateMode.UnscaledTime);
