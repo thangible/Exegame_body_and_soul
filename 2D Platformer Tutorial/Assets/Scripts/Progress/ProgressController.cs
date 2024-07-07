@@ -170,6 +170,15 @@ public void PlayAgain()
     {
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex, LoadSceneMode.Single);
+
+        if (currentScene.buildIndex == 1)
+        {
+            MusicManager.instance.PlayMusic("Level1", fadeDuration: 1f);
+        } 
+        else if (currentScene.buildIndex == 2)
+        {
+            MusicManager.instance.PlayMusic("Level2", fadeDuration: 1f);
+        }
     }
 
 
@@ -189,6 +198,7 @@ public void PlayAgain()
             Destroy(mainCamera);
         }
     }
+
 
 
     public void PlayMusic(string trackName)

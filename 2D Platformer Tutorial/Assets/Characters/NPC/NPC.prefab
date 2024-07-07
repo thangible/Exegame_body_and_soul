@@ -74,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1191603163
-  m_SortingLayer: 1
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0.54088044, b: 0.37204668, a: 1}
@@ -169,7 +169,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bbdfa3f654921f45891ab63ffd4a3f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionRange: 20
   player: {fileID: 0}
+  interactionRange: 20
+  speechCanvas: {fileID: 0}
+  speechText: {fileID: 0}
+  speechIndex: 0
+  horizontalOffset: 9
+  verticalOffset: 7
+  showToRight: 1
   _isIdle: 1
   _isInteracting: 0

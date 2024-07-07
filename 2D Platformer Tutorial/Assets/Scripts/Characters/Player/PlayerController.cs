@@ -398,7 +398,6 @@ public class PlayerController : MonoBehaviour
             if (!IsJumping && !_isJumpFalling)
             {
                 rb.AddForce(Vector2.down * downForceMagnitude, ForceMode2D.Force);
-                animator.SetFloat(AnimationStrings.yVelocity, 0);
             }
         }
 
@@ -433,10 +432,23 @@ public class PlayerController : MonoBehaviour
 
 
         // track falling state
-        if (!touchingDirections.IsApproachingGrounded)
+        //animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+        if (!touchingDirections.IsApproachingGrounded && !touchingDirections.IsApproachingGrounded)
         {
             animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+        } 
+        else
+        {
+            if (IsJumping || _isJumpFalling)
+            {
+                animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+            } 
+            else
+            {
+                animator.SetFloat(AnimationStrings.yVelocity, 0);
+            }
         }
+        
 
         // apply fall damage
         HandleFall();
@@ -483,16 +495,16 @@ public class PlayerController : MonoBehaviour
         }
         */
 
-
         if (IsFalling && (!IsJumping && !_isJumpFalling))
         {
             rb.gravityScale = original_gravityScale * fallingGravityFactor;
             animator.ResetTrigger(AnimationStrings.impactAfterFalling);
-        } 
-        else if (!IsFalling && lastIsFalling && timeSinceLastJumpCompleted > 0.05f && timeSinceLastFallCompleted > 0.05f)
+        }
+        //else if (lastIsFalling && !IsFalling && timeSinceLastJumpCompleted > 0.05f && timeSinceLastFallCompleted > 0.05f)
+        else if (lastIsFalling && touchingDirections.IsGrounded && timeSinceLastJumpCompleted > 0.05f && timeSinceLastFallCompleted > 0.05f)
         {
             //if (!touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling)
-            print("hit the ground after falling");
+            //print("hit the ground after falling");
             timeSinceLastFallCompleted = 0f;
             animator.SetTrigger(AnimationStrings.impactAfterFalling);
 
@@ -527,7 +539,7 @@ public class PlayerController : MonoBehaviour
         if (touchingDirections.IsGrounded && playerDiesFromFallDamage)
         {
             // check for collisions below the player
-            float distanceToGround = (playerCollider.size.y) + 0.1f;
+            float distanceToGround = (playerCollider.size.y) + 1f;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround, touchingDirections.groundLayerMask);
 
             if (hit.collider != null)
@@ -538,7 +550,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            print("PLAYER WILL DIE!");
+            //print("PLAYER WILL DIE!");
             if (!landedOnNoFallDamageObject)
             {
                 RespawnController.instance.AnnouncePlayerDeath();
@@ -716,7 +728,7 @@ public class PlayerController : MonoBehaviour
             timeSinceLastJumpCompleted = 0f;
 
             //if (!touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling)
-            print("hit the ground after JUMP falling");
+            //print("hit the ground after JUMP falling");
             animator.SetTrigger(AnimationStrings.impactAfterJumpFalling);
 
             if (!disabledDoubleJump)

@@ -180,6 +180,7 @@ public class SaveLoadGame : MonoBehaviour
     {
         if (player != null && player.transform != null)
         {
+            print("FIN");
             player.SetActive(false);
 
             // Respawn point
@@ -267,7 +268,7 @@ public class SaveLoadGame : MonoBehaviour
             }
 
             PlayerPrefs.Save();
-            player.SetActive(true);
+            //player.SetActive(true);
         }
     }
 }
