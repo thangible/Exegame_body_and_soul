@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Windows.Kinect; 
@@ -66,11 +68,14 @@ public class PlayerController : MonoBehaviour
     private bool landedOnNoFallDamageObject = false;
     private bool canTakeFallDamage = true;
     private string noFallDamageObjectTag = "NoFallDamageObject";
+    public float noFallDamageObjectDistance = 2f;
 
     [Header("Dash")]
     public float dashingImpulse = 24f;
     public float dashingDistance = 12f;
     public float dashingCooldown = 1f;
+    public float dashGroundInteruptionFactor = 1.5f;
+    public float dashGroundDetectionYOffset = 0f;
     private float dashingTimer = 0f;
     private bool canDash = true;
     private bool disabledDoubleJump = false;
@@ -539,8 +544,9 @@ public class PlayerController : MonoBehaviour
         if (touchingDirections.IsGrounded && playerDiesFromFallDamage)
         {
             // check for collisions below the player
-            float distanceToGround = (playerCollider.size.y) + 1f;
+            float distanceToGround = (playerCollider.size.y) + noFallDamageObjectDistance;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround, touchingDirections.groundLayerMask);
+            //Debug.DrawRay(transform.position, Vector2.down * distanceToGround);
 
             if (hit.collider != null)
             {
@@ -697,7 +703,6 @@ public class PlayerController : MonoBehaviour
             velocityForMaxScaling = maxAirJumpSpeed;
             currentVelocity = Mathf.Clamp(currentVelocity, 0f, velocityForMaxScaling);
             float forceReductionFactor = Mathf.Lerp(1f, maxDoubleJumpForceReduction, currentVelocity / velocityForMaxScaling);
-            print(forceReductionFactor);
             force = jumpImpulse / forceReductionFactor;
         }
         if (rb.velocity.y < 0)
@@ -829,20 +834,23 @@ public class PlayerController : MonoBehaviour
             while (Vector2.Distance(rb.position, targetPosition) > 0.1f)
             {
                 // raycast to detect any colliders in the path of the dash
+                float groundDetectionDistance = dashingDistance / (dashingDistance / dashGroundInteruptionFactor);
                 Vector2 boxSize = new Vector2(dashingDistance / (dashingDistance / 1.5f), playerCollider.bounds.size.y);
 
-                int numHits = Physics2D.BoxCastNonAlloc(rb.position, boxSize, 0f, dashDirection, hits, dashingDistance / (dashingDistance / 1.5f), layerMask);
+                Vector2 originOffset = new Vector2(0, playerCollider.bounds.size.y / 2f - boxSize.y / 2f + dashGroundDetectionYOffset);
+                Vector2 boxOrigin = rb.position + originOffset;
+
+                int numHits = Physics2D.BoxCastNonAlloc(boxOrigin, boxSize, 0f, dashDirection, hits, groundDetectionDistance, layerMask);
 
                 //int numHits = Physics2D.RaycastNonAlloc(rb.position, dashDirection.normalized, hits, raycastDistance, layerMask);
                 bool stopDash = false; // stop when hitting ground layer
 
-                /* show box
-                Vector2 boxOrigin = rb.position + dashDirection.normalized * boxSize.x / 2;
-                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), Color.red);
-                */
+                // show box
+                //Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), Color.red);
+                
 
                 if (numHits > 0)
                 {
