@@ -33,7 +33,7 @@ public class ObjectInstantiator : MonoBehaviour
 
         if (instantiateByDefault)
         {
-            if (ShouldObjectRespawn()) // NEWLY ADDED TODO KEEP?
+            if (ShouldObjectRespawn())
             {
                 InstantiateNewObject();
             } 

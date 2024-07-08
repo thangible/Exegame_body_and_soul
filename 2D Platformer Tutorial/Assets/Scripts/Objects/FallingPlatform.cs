@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-// Falling platform from https://www.youtube.com/watch?v=k70z88Xivzs&ab_channel=Raycastly
+// Falling platform based on https://www.youtube.com/watch?v=k70z88Xivzs&ab_channel=Raycastly
 public class FallingPlatform : MonoBehaviour
 {
     [SerializeField] private float fallDelay = 1f;

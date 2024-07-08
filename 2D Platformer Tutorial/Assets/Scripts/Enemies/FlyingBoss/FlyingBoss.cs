@@ -8,7 +8,7 @@ using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
 
-// Based on https://www.youtube.com/watch?v=_vh9mCskp_o
+// Inspired by https://www.youtube.com/watch?v=_vh9mCskp_o
 public class FlyingBoss : MonoBehaviour
 {
     [Header("Sleeping")]
@@ -176,7 +176,6 @@ public class FlyingBoss : MonoBehaviour
         if (sleepingStateFinished && awakenStateFinished)
         {
             // Always play idle movement
-            // (not equal to the idle state/animation --> TODO ideally we would resolve this in the animator, to always play the idle even while other animations are active)
             IdleMovement();
 
             // Phase One (movement)
@@ -269,7 +268,6 @@ public class FlyingBoss : MonoBehaviour
     {
         if (collision.collider.CompareTag("Player"))
         {
-            // TODO remove any effects on the enemy instance (f.E. rotation after hitting the player)
             //ResetEnemy();
 
             collision.gameObject.SetActive(false);
@@ -349,7 +347,7 @@ public class FlyingBoss : MonoBehaviour
                 Rigidbody2D playerRB = player.GetComponent<Rigidbody2D>();
                 if (playerRB != null)
                 {
-                    // TODO apply knockback here & camera shake https://www.youtube.com/watch?v=ZoZQ-cerkbg&ab_channel=Raycastly
+                    // could add knockback here, but this does not look good
                 }
 
                 // finish state
@@ -706,7 +704,7 @@ public class FlyingBoss : MonoBehaviour
 
                 for (int i = 0; i < routine3Pattern.Length; i++)
                 {
-                    //if (routine3Pattern[i] >= 0 && (routine3Pattern[i] <= 120 || routine3Pattern[i] >= 320)) { // TODO crash?
+                    //if (routine3Pattern[i] >= 0 && (routine3Pattern[i] <= 120 || routine3Pattern[i] >= 320)) {
                     FireQuickProjectile(QuickProjectileScript.ProjectileType.Linear, routine3Pattern[i]);
                 }
                 projectilesFired++;
@@ -1161,7 +1159,7 @@ public class FlyingBoss : MonoBehaviour
                     attackRange = 0f;
 
                     isMovingOnX = false;
-                    hitPlayerInProximityStateFinished = false; // TODO remove?
+                    hitPlayerInProximityStateFinished = false;
                     hitPlayerInProximityStateStarted = false;
 
                     enemyAnimator.ResetTrigger(AnimationStrings.flyingBoss_hitPlayerInProximityReturnMovement);
@@ -1242,7 +1240,7 @@ public class FlyingBoss : MonoBehaviour
     {
         if (vcamOnReset != null)
         {
-            CameraManager.SwitchCamera(vcamOnReset); // TODO instantly switch to new camera
+            CameraManager.SwitchCamera(vcamOnReset);
 
             foreach (var obj in objectsToResetAfterDefeat)
             {

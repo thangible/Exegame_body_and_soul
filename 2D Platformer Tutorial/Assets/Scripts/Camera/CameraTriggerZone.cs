@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-// create trigger zones (https://www.youtube.com/watch?v=1BdR5d1JTEI) 
+// create trigger zones (based on https://www.youtube.com/watch?v=1BdR5d1JTEI) 
 public class CameraTriggerZone : MonoBehaviour
 {
     public bool triggerOnce = false;

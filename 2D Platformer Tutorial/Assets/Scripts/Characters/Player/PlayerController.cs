@@ -453,7 +453,7 @@ public class PlayerController : MonoBehaviour
         // apply fall damage
         HandleFall();
 
-        //FallThroughPlatform(); // TODO re-activate ?
+        //FallThroughPlatform();
     }
 
 
@@ -655,7 +655,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (canWallJump)
                 {
-                    //PerformWallJump(); // TODO re-activate Wall jump ?
+                    //PerformWallJump();
                 }
             }
             */
@@ -1031,7 +1031,7 @@ public class PlayerController : MonoBehaviour
 
         // handle being crushed between 2 objects
         bool collidedWithCrushObstacle1 = false;
-        bool collidedWithCrushObstacle2 = true; // TODO fix this with = false
+        bool collidedWithCrushObstacle2 = true;
         // Check for collision with Obstacle1
         if (collision.gameObject.CompareTag("PlayerCrushOne"))
         {

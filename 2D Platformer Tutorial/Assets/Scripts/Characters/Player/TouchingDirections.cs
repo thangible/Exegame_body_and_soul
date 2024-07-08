@@ -15,7 +15,7 @@ public class TouchingDirections : MonoBehaviour
     public float wallDistance = 0.2f;
     public float ceilingDistance = 0.05f;
 
-    // Handle slopes (https://www.youtube.com/watch?v=B2BCnIIV1WE)
+    // Handle slopes
     [SerializeField] private Transform rayCastOrigin;
     [SerializeField] private Transform playerFeet;
     public LayerMask groundLayerMask; // for the player col layer --> ground

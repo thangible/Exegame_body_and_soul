@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-// Script for shooting lasers based on https://www.youtube.com/watch?v=vdci2oxVaoA&ab_channel=1MinuteUnity
+// Script for shooting lasers based on https://www.youtube.com/watch?v=OAfpDaAKVSE&t=981s&ab_channel=BinaryLunar
 public class LaserShooter : MonoBehaviour
 {
     public Transform laserPosition;

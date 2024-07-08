@@ -149,7 +149,7 @@ public class WindArea : MonoBehaviour
 
         Vector2 additionalForce = windForce * additionalForceMagnitude * 10;
 
-        Debug.Log("Additional force applied: " + additionalForceMagnitude + "for duration of " + duration); // TODO remove ?
+        Debug.Log("Additional force applied: " + additionalForceMagnitude + "for duration of " + duration);
 
 
         currentCoroutine = StartCoroutine(AddForceOverTime(rb, additionalForce, duration));
