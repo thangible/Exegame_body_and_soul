@@ -298,6 +298,8 @@ public class NoDestroy : MonoBehaviour
 
             if (level == 2)
             {
+                ProgressController.instance.SetHasPickedUpAttack();
+
                 if (PlayerPrefs.GetString("hasSolvedPuzzle") == "true")
                 {
 

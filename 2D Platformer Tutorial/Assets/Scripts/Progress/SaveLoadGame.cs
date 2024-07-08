@@ -158,6 +158,8 @@ public class SaveLoadGame : MonoBehaviour
 
             if (level == 2)
             {
+                ProgressController.instance.SetHasPickedUpAttack();
+
                 if (PlayerPrefs.GetString("hasSolvedPuzzle") == "true")
                 {
 
@@ -201,7 +203,7 @@ public class SaveLoadGame : MonoBehaviour
 
 
             // Camera
-            PlayerPrefs.DeleteKey("cameraNumber_" + level);
+            PlayerPrefs.DeleteKey("cameraName_" + level);
 
 
             // Progress
@@ -272,6 +274,7 @@ public class SaveLoadGame : MonoBehaviour
 
             if (level == 2)
             {
+                PlayerPrefs.DeleteKey("hasPickedUpAttack");
                 PlayerPrefs.DeleteKey("hasSolvedPuzzle");
                 PlayerPrefs.DeleteKey("hasOvercomeFirstFallingPlatforms");
                 PlayerPrefs.DeleteKey("hasDefeatedFlyingEnemy");
