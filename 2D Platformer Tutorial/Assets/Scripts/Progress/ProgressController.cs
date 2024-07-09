@@ -33,10 +33,28 @@ public class ProgressController : MonoBehaviour
 
 
 
+    
     private void Awake()
     {
         instance = this;
     }
+    
+
+    /*
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+    */
+
 
     private void Update()
     {
@@ -58,6 +76,11 @@ public class ProgressController : MonoBehaviour
     public void SetHasPickedUpAttack()
     {
         hasPickedUpAttack = true;
+    }
+
+    public void SetNOTPickedUpAttack()
+    {
+        hasPickedUpAttack = false;
     }
 
     public bool HasPickedUpAttack()
@@ -146,12 +169,21 @@ public class ProgressController : MonoBehaviour
             hasOvercomeLastFallingPlatforms = false;
             hasDefeatedFlyingEnemy = false;
         }*/
-    }
+}
 
-    public void PlayAgain()
+public void PlayAgain()
     {
         Scene currentScene = SceneManager.GetActiveScene();
         SceneManager.LoadScene(currentScene.buildIndex, LoadSceneMode.Single);
+
+        if (currentScene.buildIndex == 1)
+        {
+            MusicManager.instance.PlayMusic("Level1", fadeDuration: 1f);
+        } 
+        else if (currentScene.buildIndex == 2)
+        {
+            MusicManager.instance.PlayMusic("Level2", fadeDuration: 1f);
+        }
     }
 
 
@@ -159,6 +191,17 @@ public class ProgressController : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(0);
         MusicManager.instance.PlayMusic("MainMenu", fadeDuration: 1f);
+
+        //DestroyCamera();
+    }
+
+    void DestroyCamera()
+    {
+        GameObject mainCamera = GameObject.FindWithTag("MainCamera");
+        if (mainCamera != null)
+        {
+            Destroy(mainCamera);
+        }
     }
 
 

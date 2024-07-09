@@ -4,7 +4,7 @@ using UnityEngine;
 using static MovingPlatform;
 using static UnityEngine.UI.ScrollRect;
 
-// Tutorial: https://www.youtube.com/watch?v=SPmO_7Y5DLY
+
 public class MovingPlatform : MonoBehaviour
 {
     private Vector3 sourceLocation;

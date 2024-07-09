@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 public class SaveLoadGame : MonoBehaviour
 {
@@ -26,8 +27,13 @@ public class SaveLoadGame : MonoBehaviour
 
 
             // Camera
-            int cameraNumber = CameraManager.GetActiveCamera();
-            PlayerPrefs.SetInt("cameraNumber_" + level, cameraNumber);
+            string cameraName = CameraManager.GetActiveCamera();
+            if (cameraName != null)
+            {
+                PlayerPrefs.SetString("cameraName_" + level, cameraName);
+            }
+            print("SAVE sl");
+            print(PlayerPrefs.GetString("cameraName_" + level));
 
 
             // Progress
@@ -127,8 +133,13 @@ public class SaveLoadGame : MonoBehaviour
 
 
             // Camera
-            int cameraNumber = PlayerPrefs.GetInt("cameraNumber_" + level);
-            CameraManager.SetActiveCamera(cameraNumber);
+            string cameraName = PlayerPrefs.GetString("cameraName_" + level, null);
+            if (cameraName != null)
+            {
+                CameraManager.SetActiveCamera(cameraName);
+            }
+            print("LOAD sl");
+            print(cameraName);
 
 
             // Progress
@@ -147,6 +158,8 @@ public class SaveLoadGame : MonoBehaviour
 
             if (level == 2)
             {
+                ProgressController.instance.SetHasPickedUpAttack();
+
                 if (PlayerPrefs.GetString("hasSolvedPuzzle") == "true")
                 {
 
@@ -180,6 +193,7 @@ public class SaveLoadGame : MonoBehaviour
     {
         if (player != null && player.transform != null)
         {
+            print("FIN");
             player.SetActive(false);
 
             // Respawn point
@@ -189,7 +203,7 @@ public class SaveLoadGame : MonoBehaviour
 
 
             // Camera
-            PlayerPrefs.DeleteKey("cameraNumber_" + level);
+            PlayerPrefs.DeleteKey("cameraName_" + level);
 
 
             // Progress
@@ -260,6 +274,7 @@ public class SaveLoadGame : MonoBehaviour
 
             if (level == 2)
             {
+                PlayerPrefs.DeleteKey("hasPickedUpAttack");
                 PlayerPrefs.DeleteKey("hasSolvedPuzzle");
                 PlayerPrefs.DeleteKey("hasOvercomeFirstFallingPlatforms");
                 PlayerPrefs.DeleteKey("hasDefeatedFlyingEnemy");
@@ -267,7 +282,7 @@ public class SaveLoadGame : MonoBehaviour
             }
 
             PlayerPrefs.Save();
-            player.SetActive(true);
+            //player.SetActive(true);
         }
     }
 }

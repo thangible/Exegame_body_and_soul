@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Windows.Kinect; 
@@ -21,6 +23,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 moveInput; // movement input
     private float stopMovementTolerance = 0.05f;
     private float stopMovementToleranceTimer = 0f;
+    public float baseDownForceMagnitude = 30f;
+    public float maxDownForceMagnitude = 60f;
 
 
     [Header("Run")]
@@ -47,6 +51,9 @@ public class PlayerController : MonoBehaviour
     //private bool canWallJump = true;
     private bool canDoubleJump = true;
 
+    public float jumpCoolDownTime = 0.5f;
+    private float jumpCoolDownTimer = 0f;
+
     [Range(0f, 1f)] public float jumpBufferTime = 0.1f;
     [Range(0f, 1f)] public float jumpCoyoteTime = 0.1f;
     private float jumpBufferTimer = 10f;
@@ -57,18 +64,21 @@ public class PlayerController : MonoBehaviour
 
     // Fall damage
     public float fallDamageThreshold = 15f; // falling speed threshhold; not distance
-    public float fallDamageAfterJumpingThreshold = 5f;
+    public float fallDamageAfterJumpingThreshold = 20f;
     public float fallingGravityFactor = 1.2f;
     private float timeSinceLastFallCompleted = 0f;
     private bool playerDiesFromFallDamage = false;
     private bool landedOnNoFallDamageObject = false;
     private bool canTakeFallDamage = true;
     private string noFallDamageObjectTag = "NoFallDamageObject";
+    public float noFallDamageObjectDistance = 2f;
 
     [Header("Dash")]
     public float dashingImpulse = 24f;
     public float dashingDistance = 12f;
     public float dashingCooldown = 1f;
+    public float dashGroundInteruptionFactor = 1.5f;
+    public float dashGroundDetectionYOffset = 0f;
     private float dashingTimer = 0f;
     private bool canDash = true;
     private bool disabledDoubleJump = false;
@@ -78,6 +88,7 @@ public class PlayerController : MonoBehaviour
     public int attackDamage = 1;
     public float attackCooldown = 0.6f;
     private bool canAttack = true;
+    private bool attackDisabled = true;
     private string destroyableObjectTag = "DestroyableObject";
     private string hostileObjectTag = "Hostile";
 
@@ -96,8 +107,8 @@ public class PlayerController : MonoBehaviour
     private float original_gravityScale;
 
     // Kinect variables
-    //public BodySourceManager bodySourceManager;
-    public GameObject bodySourceManager = null;
+    public BodySourceManager bodySourceManager;
+    //public GameObject bodySourceManager = null;
     private Body[] bodies;
 
 
@@ -284,6 +295,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CapsuleCollider2D playerCollider;
     Animator animator;
     [SerializeField] private TrailRenderer trailRenderer;
+    //[SerializeField] private Vector3 trailRendererOffset;
 
     public string oneWayPlatformLayerName = "OneWayPlatform";
     public string playerLayerName = "Player";
@@ -308,6 +320,10 @@ public class PlayerController : MonoBehaviour
         original_gravityScale = rb.gravityScale;
     }
 
+    private void Start()
+    {
+    }
+
 
     private void OnValidate()
     {
@@ -329,10 +345,21 @@ public class PlayerController : MonoBehaviour
         jumpBufferTimer += Time.deltaTime;
         timeSinceLastJump += Time.deltaTime;
 
+        jumpCoolDownTimer += Time.deltaTime;
         timeSinceLastJumpCompleted += Time.deltaTime;
         timeSinceLastFallCompleted += Time.deltaTime;
 
         dashingTimer += Time.deltaTime;
+
+
+        // Disable/Enable Attack
+        if (!ProgressController.instance.HasPickedUpAttack())
+        {
+            attackDisabled = true;
+        } else
+        {
+            attackDisabled = false;
+        }
 
 
         // Set movement boolean with tolerance (to stop quick switch to idle mode when changing direction)
@@ -352,7 +379,7 @@ public class PlayerController : MonoBehaviour
         // Kinect input handling
         if (bodySourceManager != null)
         {
-            //bodies = bodySourceManager.GetData(); // TODO UNCOMMENT
+            bodies = bodySourceManager.GetData(); // TODO UNCOMMENT
             if (bodies != null)
             {
                 foreach (var body in bodies)
@@ -367,6 +394,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
     private void FixedUpdate()
     {
         // Movement on x
@@ -375,7 +403,24 @@ public class PlayerController : MonoBehaviour
         //rb.velocity = new Vector2(moveInput.x * CurrentMoveSpeed, rb.velocity.y); // * Time.fixedDeltaTime already handled by RigitBody
         rb.AddForce(CurrentMoveSpeed * Vector2.right, ForceMode2D.Force);
 
+        if (touchingDirections.IsGrounded || touchingDirections.IsApproachingGrounded)
+        {
+            float currentXSpeed = Mathf.Abs(rb.velocity.x);
+            float downForceMagnitude = baseDownForceMagnitude + (currentXSpeed / maxRunSpeed) * (maxDownForceMagnitude - baseDownForceMagnitude);
+            //print(downForceMagnitude);
 
+            if (!IsJumping && !_isJumpFalling)
+            {
+                rb.AddForce(Vector2.down * downForceMagnitude, ForceMode2D.Force);
+            }
+        }
+
+
+        // disable double jump
+        if (IsFalling && Mathf.Abs(rb.velocity.y) > disableDoubleJumpThreshold)
+        {
+            canDoubleJump = false; // disable double jump
+        }
 
         // Jumping
         if (jumpBufferTimer < jumpBufferTime && (!IsJumping && !_isJumpFalling) && (touchingDirections.IsGrounded || jumpCoyoteTimer < jumpCoyoteTime))
@@ -383,18 +428,12 @@ public class PlayerController : MonoBehaviour
             InitializeJump(false);
         }
         // Double Jump
-        else if (jumpBufferTimer < jumpBufferTime && (IsJumping || _isJumpFalling) && (jumpCounter < 2 && timeSinceLastJump > doubleJumpCooldown && canDoubleJump))
+        else if (jumpBufferTimer < jumpBufferTime && (IsJumping || _isJumpFalling) && (jumpCounter < 2 && timeSinceLastJump > doubleJumpCooldown && canDoubleJump) && jumpCoolDownTimer > jumpCoolDownTime)
         {
             InitializeJump(true);
         }
 
         HandleJumpState();
-
-        // disable double jump
-        if (IsFalling && Mathf.Abs(rb.velocity.y) > disableDoubleJumpThreshold)
-        {
-            canDoubleJump = false; // disable double jump
-        }
 
 
         // Dashing
@@ -407,12 +446,28 @@ public class PlayerController : MonoBehaviour
 
 
         // track falling state
-        animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+        //animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+        if (!touchingDirections.IsApproachingGrounded && !touchingDirections.IsApproachingGrounded)
+        {
+            animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+        } 
+        else
+        {
+            if (IsJumping || _isJumpFalling)
+            {
+                animator.SetFloat(AnimationStrings.yVelocity, rb.velocity.y);
+            } 
+            else
+            {
+                animator.SetFloat(AnimationStrings.yVelocity, 0);
+            }
+        }
+        
 
         // apply fall damage
         HandleFall();
 
-        //FallThroughPlatform(); // TODO re-activate ?
+        //FallThroughPlatform();
     }
 
 
@@ -454,16 +509,16 @@ public class PlayerController : MonoBehaviour
         }
         */
 
-
         if (IsFalling && (!IsJumping && !_isJumpFalling))
         {
             rb.gravityScale = original_gravityScale * fallingGravityFactor;
             animator.ResetTrigger(AnimationStrings.impactAfterFalling);
-        } 
-        else if (!IsFalling && lastIsFalling && timeSinceLastJumpCompleted > 0.05f && timeSinceLastFallCompleted > 0.05f)
+        }
+        //else if (lastIsFalling && !IsFalling && timeSinceLastJumpCompleted > 0.05f && timeSinceLastFallCompleted > 0.05f)
+        else if (lastIsFalling && touchingDirections.IsGrounded && timeSinceLastJumpCompleted > 0.05f && timeSinceLastFallCompleted > 0.05f)
         {
             //if (!touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling)
-            print("hit the ground after falling");
+            //print("hit the ground after falling");
             timeSinceLastFallCompleted = 0f;
             animator.SetTrigger(AnimationStrings.impactAfterFalling);
 
@@ -493,26 +548,25 @@ public class PlayerController : MonoBehaviour
 
                 }
             }
-            
+        }
 
+        if (touchingDirections.IsGrounded && playerDiesFromFallDamage)
+        {
             // check for collisions below the player
-            float distanceToGround = (playerCollider.size.y) + 0.1f;
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround, layerMask);
-            //Debug.DrawRay(transform.position, Vector2.down * distanceToGround, Color.red);
+            float distanceToGround = (playerCollider.size.y) + noFallDamageObjectDistance;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distanceToGround, touchingDirections.groundLayerMask);
+            //Debug.DrawRay(transform.position, Vector2.down * distanceToGround);
 
             if (hit.collider != null)
             {
                 if (hit.collider.CompareTag(noFallDamageObjectTag))
                 {
                     landedOnNoFallDamageObject = true;
-
                 }
             }
-        }
 
-        if (touchingDirections.IsGrounded && playerDiesFromFallDamage)
-        {
-            if(!landedOnNoFallDamageObject)
+            //print("PLAYER WILL DIE!");
+            if (!landedOnNoFallDamageObject)
             {
                 RespawnController.instance.AnnouncePlayerDeath();
             }
@@ -616,7 +670,7 @@ public class PlayerController : MonoBehaviour
             {
                 if (canWallJump)
                 {
-                    //PerformWallJump(); // TODO re-activate Wall jump ?
+                    //PerformWallJump();
                 }
             }
             */
@@ -658,7 +712,6 @@ public class PlayerController : MonoBehaviour
             velocityForMaxScaling = maxAirJumpSpeed;
             currentVelocity = Mathf.Clamp(currentVelocity, 0f, velocityForMaxScaling);
             float forceReductionFactor = Mathf.Lerp(1f, maxDoubleJumpForceReduction, currentVelocity / velocityForMaxScaling);
-            print(forceReductionFactor);
             force = jumpImpulse / forceReductionFactor;
         }
         if (rb.velocity.y < 0)
@@ -691,6 +744,7 @@ public class PlayerController : MonoBehaviour
             //if (!touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling)
             //print("hit the ground after JUMP falling");
             animator.SetTrigger(AnimationStrings.impactAfterJumpFalling);
+            animator.ResetTrigger(AnimationStrings.jump);
 
             if (!disabledDoubleJump)
             {
@@ -698,6 +752,7 @@ public class PlayerController : MonoBehaviour
 
             }
 
+            jumpCoolDownTimer = 0f;
             jumpCounter = 0;
             jumpCoyoteTimer = 0f;
 
@@ -720,7 +775,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -maxFallSpeed));
 
             // disable double jump when too close to ground
-            if (touchingDirections.IsApproachingGround && !touchingDirections.IsGrounded) // fixed double jump disabled right before hitting ground
+            if (touchingDirections.IsApproachingGrounded && !touchingDirections.IsGrounded) // fixed double jump disabled right before hitting ground
             {
                 canDoubleJump = false;
             }
@@ -790,20 +845,23 @@ public class PlayerController : MonoBehaviour
             while (Vector2.Distance(rb.position, targetPosition) > 0.1f)
             {
                 // raycast to detect any colliders in the path of the dash
+                float groundDetectionDistance = dashingDistance / (dashingDistance / dashGroundInteruptionFactor);
                 Vector2 boxSize = new Vector2(dashingDistance / (dashingDistance / 1.5f), playerCollider.bounds.size.y);
 
-                int numHits = Physics2D.BoxCastNonAlloc(rb.position, boxSize, 0f, dashDirection, hits, dashingDistance / (dashingDistance / 1.5f), layerMask);
+                Vector2 originOffset = new Vector2(0, playerCollider.bounds.size.y / 2f - boxSize.y / 2f + dashGroundDetectionYOffset);
+                Vector2 boxOrigin = rb.position + originOffset;
+
+                int numHits = Physics2D.BoxCastNonAlloc(boxOrigin, boxSize, 0f, dashDirection, hits, groundDetectionDistance, layerMask);
 
                 //int numHits = Physics2D.RaycastNonAlloc(rb.position, dashDirection.normalized, hits, raycastDistance, layerMask);
                 bool stopDash = false; // stop when hitting ground layer
 
-                /* show box
-                Vector2 boxOrigin = rb.position + dashDirection.normalized * boxSize.x / 2;
-                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), Color.red);
-                */
+                // show box
+                //Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), UnityEngine.Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), UnityEngine.Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), UnityEngine.Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), UnityEngine.Color.red);
+                
 
                 if (numHits > 0)
                 {
@@ -889,7 +947,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.started && canAttack)
+        if (context.started && canAttack && !attackDisabled)
         {
             animator.SetTrigger(AnimationStrings.attack);
             StartCoroutine(Attack());
@@ -906,11 +964,11 @@ public class PlayerController : MonoBehaviour
         Vector2 attackPosition = (Vector2)transform.position + attackDirection * attackRange;
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPosition, attackRange);
 
+
         // Damage or destroy them if they have the destroyableTag
         foreach (Collider2D hit in hitObjects)
         {
             // fetch object to remove hp
-
             DestroyableObject destroyableObject = hit.GetComponent<DestroyableObject>();
             if (destroyableObject != null)
             {
@@ -935,6 +993,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
     }
+
 
     private void AttackBossProjectiles(Collider2D hit)
     {
@@ -992,7 +1051,7 @@ public class PlayerController : MonoBehaviour
 
         // handle being crushed between 2 objects
         bool collidedWithCrushObstacle1 = false;
-        bool collidedWithCrushObstacle2 = true; // TODO fix this with = false
+        bool collidedWithCrushObstacle2 = true;
         // Check for collision with Obstacle1
         if (collision.gameObject.CompareTag("PlayerCrushOne"))
         {
@@ -1073,12 +1132,14 @@ public class PlayerController : MonoBehaviour
 // Handle attack directly
     public void PerformAttack() 
 {
-    if (canAttack)
+    if (canAttack && !attackDisabled)
     {
         animator.SetTrigger(AnimationStrings.attack);
         StartCoroutine(Attack());
     }
 }
+
+
 
 // Handle jump directly
 public void PerformJump()

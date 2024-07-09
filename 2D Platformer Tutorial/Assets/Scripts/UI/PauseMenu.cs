@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.Rendering;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PauseMenu : MonoBehaviour
 {
     public GameObject pauseMenuUI;
     public Animator[] pauseMenuButtonAnimators;
+    public AudioMixer audioMixer;
 
     private bool isPaused = false;
 
@@ -32,8 +36,17 @@ public class PauseMenu : MonoBehaviour
 
     void Pause()
     {
-        print("PAUSE");
-        MusicManager.instance.LowerMusicVolume(1f);
+        //return Mathf.Lerp(-80f, 0f, value);
+        if (PlayerPrefs.GetFloat("MusicVolume", -100) > -60f && PlayerPrefs.GetFloat("MusicVolume", -100) <= 0)
+        {
+            audioMixer.SetFloat("MusicVolume", PlayerPrefs.GetFloat("MusicVolume") * 1.4f);
+        }
+
+        if (PlayerPrefs.GetFloat("SFXVolume", -100) > -60f && PlayerPrefs.GetFloat("SFXVolume", -100) <= 0)
+        {
+            audioMixer.SetFloat("SFXVolume", PlayerPrefs.GetFloat("SFXVolume") * 1.3f);
+        }
+
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         SetAnimatorUpdateMode(AnimatorUpdateMode.UnscaledTime);
@@ -42,8 +55,8 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
-        print("RES");
-        MusicManager.instance.RaiseMusicVolume(1f);
+        audioMixer.SetFloat("MusicVolume", PlayerPrefs.GetFloat("MusicVolume"));
+        audioMixer.SetFloat("SFXVolume", PlayerPrefs.GetFloat("SFXVolume"));
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
         SetAnimatorUpdateMode(AnimatorUpdateMode.Normal);

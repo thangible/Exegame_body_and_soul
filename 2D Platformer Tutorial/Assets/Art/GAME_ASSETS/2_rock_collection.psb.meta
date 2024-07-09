@@ -1,0 +1,699 @@
+fileFormatVersion: 2
+guid: 3b1a0c7bd9c3045ea99d940ea8d252e5
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: b2a9591990af98743ba3ff7cf1000886, type: 3}
+  textureImporterSettings:
+    alphaSource: 1
+    mipMapMode: 0
+    enableMipMap: 1
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+    convertToNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+    swizzle: 50462976
+    isReadable: 0
+    streamingMipmaps: 1
+    streamingMipmapsPriority: 0
+    vTOnly: 0
+    ignoreMipmapLimit: 0
+    nPOTScale: 1
+    sRGBTexture: 1
+    spriteMode: 2
+    spriteExtrude: 1
+    spriteMeshType: 1
+    alignment: 0
+    spritePivot: {x: 0.5, y: 0.5}
+    spritePixelsToUnits: 100
+    spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+    spriteGenerateFallbackPhysicsShape: 0
+    generateCubemap: 6
+    cubemapConvolution: 0
+    seamlessCubemap: 0
+    alphaIsTransparency: 1
+    spriteTessellationDetail: -1
+    textureType: 8
+    textureShape: 1
+    singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
+    cookieMode: 0
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
+    normalMap: 0
+    textureFormat: 0
+    maxTextureSize: 0
+    lightmap: 0
+    compressionQuality: 0
+    linearTexture: 0
+    grayScaleToAlpha: 0
+    rGBM: 0
+    cubemapConvolutionSteps: 0
+    cubemapConvolutionExponent: 0
+    maxTextureSizeSet: 0
+    compressionQualitySet: 0
+    textureFormatSet: 0
+    applyGammaDecoding: 0
+  spriteImportData:
+  - name: 
+    originalName: 
+    pivot: {x: 0, y: 0}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0
+      height: 0
+    spriteID: 
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+    spritePosition: {x: 0, y: 0}
+  mosaicSpriteImportData: []
+  rigSpriteImportData:
+  - name: 2_mossground1
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 1311
+      y: 7383
+      width: 1451
+      height: 489
+    spriteID: 20bed01e73a8f4936bf45fade00bbc9c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1311, y: 7383}
+    spritePosition: {x: 5232, y: 405}
+  - name: 2_mossground2
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 1311
+      y: 6881
+      width: 1464
+      height: 494
+    spriteID: 1b0bd718c63e44ce485804c97fe81bd1
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1311, y: 6881}
+    spritePosition: {x: 5318, y: 1600}
+  - name: 2_mossground3
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 1311
+      y: 6379
+      width: 1469
+      height: 494
+    spriteID: 192bb1b6ba1c84620b8f1a986bac0593
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1311, y: 6379}
+    spritePosition: {x: 5214, y: 1042}
+  - name: Layer 2
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 2788
+      y: 6379
+      width: 0
+      height: 0
+    spriteID: 1340e52826cca4c259ffbf8a66431061
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2788, y: 6379}
+    spritePosition: {x: 0, y: 7018}
+  - name: long_rock1
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4629
+      width: 1272
+      height: 2241
+    spriteID: f2be8eee03e6b4d9892edcec879892b5
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4629}
+    spritePosition: {x: 5108, y: 2158}
+  - name: long_ver_redrock_R
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4932
+      y: 4
+      width: 1831
+      height: 573
+    spriteID: bf3e076266f1c4318904ed365bf28017
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4932, y: 4}
+    spritePosition: {x: 3487, y: 1684}
+  - name: long_ver_redrock_L
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4932
+      y: 585
+      width: 1831
+      height: 573
+    spriteID: bf3e0e7adb9f2451fa9fd11b06dc1ab8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4932, y: 585}
+    spritePosition: {x: 1656, y: 1684}
+  - name: short_ver_redrock_L
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4932
+      y: 1166
+      width: 1573
+      height: 426
+    spriteID: 5ff12128118164c41bf5a993c19ed0e8
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4932, y: 1166}
+    spritePosition: {x: 1571, y: 1323}
+  - name: short_ver_redrock_R
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4932
+      y: 1600
+      width: 1573
+      height: 426
+    spriteID: f10a1ab5e450947239bfef08d94c2883
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4932, y: 1600}
+    spritePosition: {x: 3487, y: 1323}
+  - name: long_rock2
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 1311
+      y: 1881
+      width: 1272
+      height: 2241
+    spriteID: 2275b976ccc6b4d4da7441fc3193315a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1311, y: 1881}
+    spritePosition: {x: 4238, y: 4705}
+  - name: long_rock3
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 1311
+      y: 4130
+      width: 1272
+      height: 2241
+    spriteID: 47afb411d3876412ea3c9cc1ff2c3749
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1311, y: 4130}
+    spritePosition: {x: 384, y: 203}
+  - name: long_rock4
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 2944
+      y: 4
+      width: 1272
+      height: 2241
+    spriteID: f79bcd5f3cee34da29181a61c1b078da
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2944, y: 4}
+    spritePosition: {x: 5510, y: 4639}
+  - name: long_rock5
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 2944
+      y: 2253
+      width: 1272
+      height: 2241
+    spriteID: e472bd86c21264e92957ea0ffa1ab31d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2944, y: 2253}
+    spritePosition: {x: 3028, y: 4639}
+  - name: long_rock6
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 2944
+      y: 4502
+      width: 1272
+      height: 2241
+    spriteID: fe02be8957ed843ec811880fb2dd3ebb
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 2944, y: 4502}
+    spritePosition: {x: 1656, y: 4472}
+  - name: long_rock7
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 2379
+      width: 1272
+      height: 2242
+    spriteID: 4d73425b9a9fb44a39f9dffec0eb05f5
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 2379}
+    spritePosition: {x: 106, y: 4558}
+  - name: thin_redrock
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4224
+      y: 4
+      width: 700
+      height: 2353
+    spriteID: fb4ca4b5535fc46218edff48f147981d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4224, y: 4}
+    spritePosition: {x: 3875, y: 2286}
+  - name: fat_redrock
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 4
+      width: 1299
+      height: 2367
+    spriteID: 74cfa0624df514427832c14a6492ffa6
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+    spritePosition: {x: 2292, y: 2158}
+  - name: short_rock
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 1311
+      y: 4
+      width: 1625
+      height: 1869
+    spriteID: 0afce61d910744ee8a6317453513ab6a
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 1311, y: 4}
+    spritePosition: {x: 106, y: 2444}
+  characterData:
+    bones: []
+    parts: []
+    dimension: {x: 0, y: 0}
+    characterGroups: []
+    pivot: {x: 0, y: 0}
+    boneReadOnly: 0
+  sharedRigSpriteImportData: []
+  sharedRigCharacterData:
+    bones: []
+    parts: []
+    dimension: {x: 0, y: 0}
+    characterGroups: []
+    pivot: {x: 0, y: 0}
+    boneReadOnly: 0
+  platformSettings: []
+  mosaicLayers: 1
+  characterMode: 1
+  documentPivot: {x: 0, y: 0}
+  documentAlignment: 7
+  importHiddenLayers: 0
+  layerMappingOption: 2
+  generatePhysicsShape: 0
+  paperDollMode: 0
+  keepDupilcateSpriteName: 1
+  skeletonAssetReferenceID: 
+  padding: 4
+  spriteSizeExpand: 0
+  spriteCategoryList:
+    categories: []
+  spritePackingTag: 
+  resliceFromLayer: 0
+  mosaicPSDLayers: []
+  rigPSDLayers:
+  - name: 2_mossground1
+    spriteName: 2_mossground1
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 20bed01e73a8f4936bf45fade00bbc9c
+    layerID: 25
+    mosaicPosition: {x: 1311, y: 7383}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: 2_mossground2
+    spriteName: 2_mossground2
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 1b0bd718c63e44ce485804c97fe81bd1
+    layerID: 24
+    mosaicPosition: {x: 1311, y: 6881}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: 2_mossground3
+    spriteName: 2_mossground3
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 192bb1b6ba1c84620b8f1a986bac0593
+    layerID: 23
+    mosaicPosition: {x: 1311, y: 6379}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: Layer 2
+    spriteName: Layer 2
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 1340e52826cca4c259ffbf8a66431061
+    layerID: 4
+    mosaicPosition: {x: 2788, y: 6379}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_rock1
+    spriteName: long_rock1
+    isGroup: 0
+    parentIndex: -1
+    spriteID: f2be8eee03e6b4d9892edcec879892b5
+    layerID: 15
+    mosaicPosition: {x: 4, y: 4629}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_ver_redrock_R
+    spriteName: long_ver_redrock_R
+    isGroup: 0
+    parentIndex: -1
+    spriteID: bf3e076266f1c4318904ed365bf28017
+    layerID: 22
+    mosaicPosition: {x: 4932, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_ver_redrock_L
+    spriteName: long_ver_redrock_L
+    isGroup: 0
+    parentIndex: -1
+    spriteID: bf3e0e7adb9f2451fa9fd11b06dc1ab8
+    layerID: 21
+    mosaicPosition: {x: 4932, y: 585}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: short_ver_redrock_L
+    spriteName: short_ver_redrock_L
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 5ff12128118164c41bf5a993c19ed0e8
+    layerID: 20
+    mosaicPosition: {x: 4932, y: 1166}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: short_ver_redrock_R
+    spriteName: short_ver_redrock_R
+    isGroup: 0
+    parentIndex: -1
+    spriteID: f10a1ab5e450947239bfef08d94c2883
+    layerID: 19
+    mosaicPosition: {x: 4932, y: 1600}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_rock2
+    spriteName: long_rock2
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 2275b976ccc6b4d4da7441fc3193315a
+    layerID: 14
+    mosaicPosition: {x: 1311, y: 1881}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_rock3
+    spriteName: long_rock3
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 47afb411d3876412ea3c9cc1ff2c3749
+    layerID: 13
+    mosaicPosition: {x: 1311, y: 4130}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_rock4
+    spriteName: long_rock4
+    isGroup: 0
+    parentIndex: -1
+    spriteID: f79bcd5f3cee34da29181a61c1b078da
+    layerID: 12
+    mosaicPosition: {x: 2944, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_rock5
+    spriteName: long_rock5
+    isGroup: 0
+    parentIndex: -1
+    spriteID: e472bd86c21264e92957ea0ffa1ab31d
+    layerID: 11
+    mosaicPosition: {x: 2944, y: 2253}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_rock6
+    spriteName: long_rock6
+    isGroup: 0
+    parentIndex: -1
+    spriteID: fe02be8957ed843ec811880fb2dd3ebb
+    layerID: 10
+    mosaicPosition: {x: 2944, y: 4502}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: long_rock7
+    spriteName: long_rock7
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 4d73425b9a9fb44a39f9dffec0eb05f5
+    layerID: 9
+    mosaicPosition: {x: 4, y: 2379}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: thin_redrock
+    spriteName: thin_redrock
+    isGroup: 0
+    parentIndex: -1
+    spriteID: fb4ca4b5535fc46218edff48f147981d
+    layerID: 17
+    mosaicPosition: {x: 4224, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: fat_redrock
+    spriteName: fat_redrock
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 74cfa0624df514427832c14a6492ffa6
+    layerID: 16
+    mosaicPosition: {x: 4, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: short_rock
+    spriteName: short_rock
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 0afce61d910744ee8a6317453513ab6a
+    layerID: 8
+    mosaicPosition: {x: 1311, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  sharedRigPSDLayers: []
+  pSDLayerImportSetting: []
+  importFileNodeState: 1
+  platformSettingsDirtyTick: 0
+  spriteSizeExpandChanged: 0
+  generateGOHierarchy: 0
+  textureAssetName: 
+  prefabAssetName: 
+  spriteLibAssetName: 
+  skeletonAssetName: 
+  secondarySpriteTextures: []
