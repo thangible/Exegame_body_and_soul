@@ -2,8 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using System.Collections;
-using UnityEditor.Rendering.LookDev;
-using Unity.VisualScripting;
 
 // Switching between multiple cameras (based on https://www.youtube.com/watch?v=wmTCWMcjIzo) --> place on main camera
 public class CameraManager : MonoBehaviour
