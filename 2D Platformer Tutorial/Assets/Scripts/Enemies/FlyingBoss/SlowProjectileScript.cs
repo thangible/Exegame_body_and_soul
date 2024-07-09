@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// based on https://www.youtube.com/watch?v=--u20SaCCow&ab_channel=MoreBBlakeyyy
+
 public class SlowProjectileScript : MonoBehaviour
 {
     public static List<SlowProjectileScript> slowProjectiles = new List<SlowProjectileScript>();
@@ -91,7 +91,7 @@ public class SlowProjectileScript : MonoBehaviour
                 if (Time.time - lastAttackMoveTime <= attackMoveTimeframe)
                 {
                     changedDirectionToEnemy = true;
-                    redirectProjectile();
+                    //redirectProjectile();
 
                     trailRenderer.enabled = true;
                 }
@@ -166,6 +166,7 @@ public class SlowProjectileScript : MonoBehaviour
     public void OnPlayerAttackMove()
     {
         lastAttackMoveTime = Time.time;
+        redirectProjectile();
     }
 
 

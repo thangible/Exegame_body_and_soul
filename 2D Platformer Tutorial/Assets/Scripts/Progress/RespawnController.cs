@@ -15,15 +15,35 @@ public class RespawnController : MonoBehaviour
     private float recentlyDiedDuration = 1f;
 
     // introduce lock to isPlayerAlive
-    private readonly object playerAliveLock = new object(); // TODO keep or move?
+    private readonly object playerAliveLock = new object();
 
 
+    
     private void Awake()
     {
         isPlayerAlive = true;
         hasRecentlyDied = false;
         instance = this;
     }
+    
+
+    /*
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        isPlayerAlive = true;
+        hasRecentlyDied = false;
+    }
+    */
 
     void Update()
     {

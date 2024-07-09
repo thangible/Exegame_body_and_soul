@@ -50,7 +50,6 @@ public class CameraScript : MonoBehaviour
         */
 
 
-        // another method (https://www.youtube.com/watch?v=gFWQHordrtA)
         var horizontal = player.bounds.size.x * (float)Screen.height / (float)Screen.width; // camera.pixelHeight / camera.pixelWidth;
         var vertical = player.bounds.size.y;
         var size = (Mathf.Max(horizontal, vertical) * 0.5f) * camScaler;
@@ -60,7 +59,6 @@ public class CameraScript : MonoBehaviour
 
     public void adjustOrthoSize(float camScaler)
     {
-        // another method (https://www.youtube.com/watch?v=gFWQHordrtA)
         var horizontal = player.bounds.size.x * (float)Screen.height / (float)Screen.width;
         var vertical = player.bounds.size.y;
         var size = (Mathf.Max(horizontal, vertical) * 0.5f) * camScaler;

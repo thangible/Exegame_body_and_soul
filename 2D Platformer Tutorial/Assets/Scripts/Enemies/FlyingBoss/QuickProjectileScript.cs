@@ -105,7 +105,8 @@ public class QuickProjectileScript : MonoBehaviour
                 // button pressed in the last time
                 if (Time.time - lastBlockMoveTime <= blockMoveTimeframe && isBlockAvailable)
                 {
-                    Destroy(gameObject);
+                    gameObject.gameObject.SetActive(false);
+                    //Destroy(gameObject);
 
                     isBlockAvailable = false;
                     MakeBlockAvailable();

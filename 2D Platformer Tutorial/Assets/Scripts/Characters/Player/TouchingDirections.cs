@@ -15,22 +15,26 @@ public class TouchingDirections : MonoBehaviour
     public float wallDistance = 0.2f;
     public float ceilingDistance = 0.05f;
 
-    // Handle slopes (https://www.youtube.com/watch?v=B2BCnIIV1WE)
+    // Handle slopes
     [SerializeField] private Transform rayCastOrigin;
-    //[SerializeField] private Transform playerFeet;
-    [SerializeField] private LayerMask layerMask; // for the player col layer --> ground
+    [SerializeField] private Transform playerFeet;
+    public LayerMask groundLayerMask; // for the player col layer --> ground
 
     RaycastHit2D[] groundHits = new RaycastHit2D[5];
     private RaycastHit2D _groundHit; // feet on ground
+
     RaycastHit2D[] approachingGroundHits = new RaycastHit2D[5];
     private RaycastHit2D _approachingGroundHit;
+
     RaycastHit2D[] ceilingHits = new RaycastHit2D[5];
     private RaycastHit2D _ceilingHit; // hitting head on ceiling
+
     RaycastHit2D[] wallHits = new RaycastHit2D[5];
+    private RaycastHit2D _wallHit;
 
     CapsuleCollider2D touchingCol;
-    [SerializeField] private BoxCollider2D feetCol;
-    [Range(0f, 1f)] public float headWidth = 1f;
+    //[SerializeField] private BoxCollider2D feetCol;
+    //[Range(0f, 1f)] public float headWidth = 1f;
 
 
     private Vector2 wallCheckDirection => gameObject.transform.localScale.x > 0 ? Vector2.right : Vector2.left; // => means the value automatically gets updated like in the update() method
@@ -49,16 +53,17 @@ public class TouchingDirections : MonoBehaviour
     }
 
     [SerializeField]
-    private bool _isApproachingGround = false;
-    public bool IsApproachingGround
+    private bool _isApproachingGrounded = false;
+    public bool IsApproachingGrounded
     {
         get
         {
-            return _isApproachingGround;
+            return _isApproachingGrounded;
         }
         private set
         {
-            _isApproachingGround = value;
+            _isApproachingGrounded = value;
+            animator.SetBool(AnimationStrings.isApproachingGrounded, value);
         }
     }
     
@@ -106,8 +111,6 @@ public class TouchingDirections : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
         //GroundCheckMethod();
     }
 
@@ -127,11 +130,12 @@ public class TouchingDirections : MonoBehaviour
             IsGrounded = false;
         }
         */
-
+        
+        GroundCheckMethod();
 
         //IsGrounded = touchingCol.Cast(Vector2.down, castFilter, groundHits, groundDistance) > 0;
         float adjustedGroundDistance = groundDistance + touchingCol.bounds.extents.y;
-        int numGroundHits = Physics2D.RaycastNonAlloc(touchingCol.bounds.center, Vector2.down, groundHits, adjustedGroundDistance, layerMask);
+        int numGroundHits = Physics2D.RaycastNonAlloc(touchingCol.bounds.center, Vector2.down, groundHits, adjustedGroundDistance, groundLayerMask);
         IsGrounded = numGroundHits > 0;
         //Debug.DrawRay(touchingCol.bounds.center, Vector2.down * adjustedGroundDistance, Color.green);
 
@@ -143,15 +147,15 @@ public class TouchingDirections : MonoBehaviour
 
         //IsApproachingGround = touchingCol.Cast(Vector2.down, castFilter, approachingGroundHits, approachingGroundDistance) > 0;
         float adjustedApproachingGroundDistance = approachingGroundDistance + touchingCol.bounds.extents.y;
-        int numApproachingGroundHits = Physics2D.RaycastNonAlloc(touchingCol.bounds.center, Vector2.down, approachingGroundHits, adjustedApproachingGroundDistance, layerMask);
-        IsApproachingGround = numApproachingGroundHits > 0;
+        int numApproachingGroundHits = Physics2D.RaycastNonAlloc(touchingCol.bounds.center, Vector2.down, approachingGroundHits, adjustedApproachingGroundDistance, groundLayerMask);
+        IsApproachingGrounded = numApproachingGroundHits > 0;
         //Debug.DrawRay(touchingCol.bounds.center, Vector2.down * adjustedApproachingGroundDistance, Color.green);
 
         IsOnCeiling = touchingCol.Cast(Vector2.up, castFilter, ceilingHits, ceilingDistance) > 0 && !IsGrounded; // added && !IsGrounded
 
         //IsOnWall = touchingCol.Cast(wallCheckDirection, castFilter, wallHits, wallDistance) > 0;
         float adjustedWallDistance = wallDistance + touchingCol.bounds.size.x / 2;
-        int numWallHits = Physics2D.RaycastNonAlloc(touchingCol.bounds.center, wallCheckDirection, wallHits, adjustedWallDistance, layerMask);
+        int numWallHits = Physics2D.RaycastNonAlloc(touchingCol.bounds.center, wallCheckDirection, wallHits, adjustedWallDistance, groundLayerMask);
         IsOnWall = numWallHits > 0;
         //Debug.DrawRay(touchingCol.bounds.center, wallCheckDirection * adjustedWallDistance, Color.red);
         //RaycastHit2D[] hits = Physics2D.BoxCastAll(touchingCol.bounds.center, boxCastSize, 0f, wallCheckDirection, wallDistance, layerMask);
@@ -161,17 +165,16 @@ public class TouchingDirections : MonoBehaviour
     // method uses a raycast to check below the player. Use this ray hit info to update player position (outdated)
     private void GroundCheckMethod()
     {
-        /*
-        GroundHit2 = Physics2D.Raycast(rayCastOrigin.position, -Vector2.up, 100f, layerMask);
+        _groundHit = Physics2D.Raycast(rayCastOrigin.position, -Vector2.up, 100f, groundLayerMask);
+        //IsGrounded = _groundHit != false;
 
-        //Performant check to see if raycast hit has any data
-        if (GroundHit2D != false)
+        if (_groundHit != false)
         {
-            //Vector2 temp = playerFeet.position;
-            //temp.y = GroundHit2D.point.y;
-            //playerFeet.position = temp;
+            Vector2 temp = playerFeet.position;
+            temp.y = _groundHit.point.y;
+            playerFeet.position = temp;
         }
-        */
+        
     }
 
     void DebugDrawBoxCast(Vector2 origin, Vector2 size, float distance, RaycastHit2D[] hits, bool isHit)

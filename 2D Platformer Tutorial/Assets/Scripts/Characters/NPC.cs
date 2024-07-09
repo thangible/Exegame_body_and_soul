@@ -1,14 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NPC : MonoBehaviour
 {
-    public float interactionRange = 5f;
-
     public GameObject player;
     private Transform playerTransform;
     private Animator animator;
+
+    public float interactionRange = 20f;
+
+    public Canvas speechCanvas;
+    public Text speechText;
+    public int speechIndex = 0;
+
+    public float horizontalOffset = 7f;
+    public float verticalOffset = 7f;
+    public bool showToRight = true;
+
 
     [SerializeField]
     private bool _isIdle = true;
@@ -41,6 +51,16 @@ public class NPC : MonoBehaviour
     }
 
 
+    private string[] speech = {
+        "Welcome to the realm \nbetween life & death.\n\nJump and run to traverse \nthese lands, but remain vigilant!",
+
+        "There is a big gap in front of you. \nTry to activate the dash ability.",
+
+        "Here, collect this powerful orb! \nThis will surely be of use\n when trying to apply force."
+    };
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +69,16 @@ public class NPC : MonoBehaviour
         if (player != null)
         {
             playerTransform = player.transform;
+        }
+
+        if (speechCanvas != null)
+        {
+            float xOffset = showToRight ? horizontalOffset : -horizontalOffset;
+            float yOffset = verticalOffset;
+
+            Vector3 newPos = transform.position + new Vector3(xOffset, yOffset, 0);
+            speechCanvas.transform.position = newPos;
+            speechCanvas.gameObject.SetActive(false);
         }
     }
 
@@ -79,6 +109,7 @@ public class NPC : MonoBehaviour
                 if (wasInteracting)
                 {
                     IsInteracting = false;
+                    //speechCanvas.gameObject.SetActive(false);
                 }
                 if (!wasIdle)
                 {
@@ -97,7 +128,13 @@ public class NPC : MonoBehaviour
 
     private void PlayInteractions()
     {
-
+        if (speechCanvas != null && speechText != null)
+        {
+            speechIndex = Mathf.Clamp(speechIndex, 0, speech.Length - 1);
+            speechText.text = speech[speechIndex];
+            speechCanvas.gameObject.SetActive(true);
+        }
     }
+
 
 }

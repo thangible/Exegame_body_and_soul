@@ -7,6 +7,10 @@ using UnityEngine.UI;
 using static Cinemachine.DocumentationSortingAttribute;
 using System.Runtime.ExceptionServices;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.Audio;
+using UnityEngine.UIElements;
+
 
 // Script for menu canvas
 public class NoDestroy : MonoBehaviour
@@ -17,6 +21,17 @@ public class NoDestroy : MonoBehaviour
     private static int _selectedLevel = 1;
 
     public GameObject firstMenu;
+
+    public GameObject kinectButtonActive;
+    public GameObject kinectButtonInactive;
+    public GameObject keyboardButtonActive;
+    public GameObject keyboardButtonInactive;
+
+    public AudioMixer audioMixer;
+    public UnityEngine.UI.Slider musicSlider;
+    public UnityEngine.UI.Slider sfxSlider;
+
+    public GameObject transitionsContainer;
 
     public Text loadLevelText;
     public Text levelTimeText;
@@ -52,6 +67,11 @@ public class NoDestroy : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    private void Start()
+    {
+        LoadVolume();
+    }
+
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.buildIndex == 0)
@@ -62,9 +82,17 @@ public class NoDestroy : MonoBehaviour
     }
 
 
+
+
+
+
+
     public void PlayGame(int index)
     {
         //SceneManager.LoadSceneAsync(index);
+
+        transitionsContainer.SetActive(true);
+
         SceneManager.LoadSceneAsync(index).completed += (AsyncOperation asyncOperation) =>
         {
             GameObject player = GameObject.FindGameObjectWithTag("Player");
@@ -74,8 +102,11 @@ public class NoDestroy : MonoBehaviour
                 UpdateSettings(player);
             }
 
+            transitionsContainer.SetActive(false);
+
             PlayGameMusic(index);
         };
+        
     }
 
 
@@ -85,6 +116,80 @@ public class NoDestroy : MonoBehaviour
         UpdateLevelText();
         UpdateLevelTimeText();
     }
+
+    public void PlaySelectedLevel()
+    {
+        //SceneManager.LoadSceneAsync(_selectedLevel);
+
+        transitionsContainer.SetActive(true);
+        
+        SceneManager.LoadSceneAsync(_selectedLevel).completed += (AsyncOperation asyncOperation) =>
+        {
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                // Settings
+                UpdateSettings(player);
+            }
+
+            transitionsContainer.SetActive(false);
+
+            PlayGameMusic(_selectedLevel);
+        };
+        
+    }
+
+
+
+    public void LoadCheckpointForSelectedLevel()
+    {
+        StartCoroutine(LoadCheckpointCoroutine());
+    }
+    private IEnumerator LoadCheckpointCoroutine()
+    {
+
+        int isFinished = PlayerPrefs.GetInt("isFinished_" + _selectedLevel);
+
+        if (isFinished == 0)
+        {
+            /*
+            LevelManager.Instance.LoadScene(_selectedLevel);
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                // Settings
+                UpdateSettings(player);
+            }
+
+            PlayGameMusic(_selectedLevel);
+            */
+
+
+            transitionsContainer.SetActive(true);
+
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(_selectedLevel);
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            LoadLevel(_selectedLevel, player);
+
+            // Settings
+            UpdateSettings(player);
+
+            transitionsContainer.SetActive(false);
+
+            PlayGameMusic(_selectedLevel);
+        }
+        else
+        {
+            PlaySelectedLevel();
+        }
+    }
+
+
 
     private void UpdateLevelText()
     {
@@ -103,21 +208,7 @@ public class NoDestroy : MonoBehaviour
         }
     }
 
-    public void PlaySelectedLevel()
-    {
-        //SceneManager.LoadSceneAsync(_selectedLevel);
-        SceneManager.LoadSceneAsync(_selectedLevel).completed += (AsyncOperation asyncOperation) =>
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                // Settings
-                UpdateSettings(player);
-            }
 
-            PlayGameMusic(_selectedLevel);
-        };
-    }
 
 
     private void PlayGameMusic(int sceneIndex)
@@ -142,37 +233,7 @@ public class NoDestroy : MonoBehaviour
 
 
 
-    public void LoadCheckpointForSelectedLevel()
-    {
-        StartCoroutine(LoadCheckpointCoroutine());
-    }
-    private IEnumerator LoadCheckpointCoroutine()
-    {
-
-        int isFinished= PlayerPrefs.GetInt("isFinished_" + _selectedLevel);
-
-        if (isFinished == 0)
-        {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(_selectedLevel);
-            while (!asyncLoad.isDone)
-            {
-                yield return null;
-            }
-
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            LoadLevel(_selectedLevel, player);
-
-            // Settings
-            UpdateSettings(player);
-
-            PlayGameMusic(_selectedLevel);
-        }
-        else
-        {
-            PlaySelectedLevel();
-        }
-    }
-
+ 
 
 
     public void UpdateSettings(GameObject player)
@@ -212,8 +273,13 @@ public class NoDestroy : MonoBehaviour
 
 
             // Camera
-            int cameraNumber = PlayerPrefs.GetInt("cameraNumber_" + level);
-            CameraManager.SetActiveCamera(cameraNumber);
+            string cameraName = PlayerPrefs.GetString("cameraName_" + level, null);
+            if (cameraName != null)
+            {
+                CameraManager.SetActiveCamera(cameraName);
+            }
+            print("LOAD nd");
+            print(cameraName);
 
 
             // Progress
@@ -232,6 +298,8 @@ public class NoDestroy : MonoBehaviour
 
             if (level == 2)
             {
+                ProgressController.instance.SetHasPickedUpAttack();
+
                 if (PlayerPrefs.GetString("hasSolvedPuzzle") == "true")
                 {
 
@@ -263,12 +331,63 @@ public class NoDestroy : MonoBehaviour
 
 
 
+    public void PlayClickSound()
+    {
+        SoundManager.instance.PlaySound2D("Click");
+    }
+
+
+    public void UpdateMusicVolume(float volume)
+    {
+        audioMixer.SetFloat("MusicVolume", volume);
+    }
+
+    public void UpdateSoundEffectVolume(float volume)
+    {
+        audioMixer.SetFloat("SFXVolume", volume);
+    }
+
+    public void SaveVolume()
+    {
+        audioMixer.GetFloat("MusicVolume", out float musicVolume);
+        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
+
+        audioMixer.GetFloat("SFXVolume", out float sfxVolume);
+        PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+    }
+
+    public void LoadVolume()
+    {
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
+    }
+
+
 
     public void SwitchControls(int inputMethod)
     {
         PlayerPrefs.SetInt("input", inputMethod);
         PlayerPrefs.Save();
     }
+
+    public void ActivateControlsButtons()
+    {
+        if (PlayerPrefs.GetInt("input", -1) == 0) // keyboard
+        {
+            kinectButtonActive.SetActive(false);
+            kinectButtonInactive.SetActive(true);
+            keyboardButtonActive.SetActive(true);
+            keyboardButtonInactive.SetActive(false);
+        } 
+        else if (PlayerPrefs.GetInt("input", -1) == 1) // kinect
+        {
+            kinectButtonActive.SetActive(true);
+            kinectButtonInactive.SetActive(false);
+            keyboardButtonActive.SetActive(false);
+            keyboardButtonInactive.SetActive(true);
+        }
+    }
+
 
     public void DeleteAllScores()
     {
@@ -279,15 +398,6 @@ public class NoDestroy : MonoBehaviour
 
         PlayerPrefs.Save();
     }
-
-
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
-
-
 
 
 
@@ -360,5 +470,12 @@ public class NoDestroy : MonoBehaviour
             }
         }
     }
+
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
 
 }
