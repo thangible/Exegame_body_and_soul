@@ -107,8 +107,8 @@ public class PlayerController : MonoBehaviour
     private float original_gravityScale;
 
     // Kinect variables
-    //public BodySourceManager bodySourceManager;
-    public GameObject bodySourceManager = null;
+    public BodySourceManager bodySourceManager;
+    //public GameObject bodySourceManager = null;
     private Body[] bodies;
 
 
@@ -379,7 +379,7 @@ public class PlayerController : MonoBehaviour
         // Kinect input handling
         if (bodySourceManager != null)
         {
-            //bodies = bodySourceManager.GetData(); // TODO UNCOMMENT
+            bodies = bodySourceManager.GetData(); // TODO UNCOMMENT
             if (bodies != null)
             {
                 foreach (var body in bodies)

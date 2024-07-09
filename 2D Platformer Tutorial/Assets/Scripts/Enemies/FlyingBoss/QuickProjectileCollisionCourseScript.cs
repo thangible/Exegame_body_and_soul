@@ -82,6 +82,7 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
                 if (Time.time - lastBlockMoveTime <= blockMoveTimeframe)
                 {
                     //Destroy(gameObject);
+                    gameObject.gameObject.SetActive(false);
                 }
             }
         }
@@ -110,7 +111,7 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Destroy(gameObject);
+            gameObject.gameObject.SetActive(false);
 
             collision.gameObject.SetActive(false);
             enemyScript.PlayerDefeated();
@@ -126,7 +127,8 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
     public void OnPlayerAttackMove()
     {
         lastBlockMoveTime = Time.time;
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.gameObject.SetActive(false);
     }
 
 
