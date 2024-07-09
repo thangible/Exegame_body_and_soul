@@ -94,7 +94,49 @@ ScriptedImporter:
     spritePosition: {x: 0, y: 0}
   mosaicSpriteImportData: []
   rigSpriteImportData:
-  - name: dungeon_L
+  - name: dugeon_patch_3
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 5254
+      width: 3094
+      height: 1119
+    spriteID: 547ca9182805b4184aa2573a0055e4fa
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 5254}
+    spritePosition: {x: 5761, y: 3097}
+  - name: dungeon_patch
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 6381
+      width: 2272
+      height: 1068
+    spriteID: 195147514274f47ad8da0fc7f6a87ab3
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 6381}
+    spritePosition: {x: 9346, y: 2932}
+  - name: dungeon_patch
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -103,6 +145,69 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
+      width: 2002
+      height: 2058
+    spriteID: 1c6074b2d0c7f4a3aa802e5f30a56be9
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 4}
+    spritePosition: {x: 9616, y: 433}
+  - name: dungeon_patch
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 2070
+      width: 2496
+      height: 1575
+    spriteID: 2a694b3a768b240429184525f41cfab6
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 2070}
+    spritePosition: {x: 6851, y: 0}
+  - name: dungeon_patch
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 3653
+      width: 2416
+      height: 1593
+    spriteID: 9e3def1b5b27d4eef82b729f8627f82c
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 3653}
+    spritePosition: {x: 4442, y: 354}
+  - name: dungeon_L
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 2508
+      y: 2070
       width: 1476
       height: 1224
     spriteID: e87eca417f1584242b47194322a6553f
@@ -113,8 +218,8 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 4}
-    spritePosition: {x: 1884, y: 34}
+    uvTransform: {x: 2508, y: 2070}
+    spritePosition: {x: 1609, y: 0}
   - name: dungeon_R
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -122,8 +227,8 @@ ScriptedImporter:
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 4
-      y: 1236
+      x: 2428
+      y: 3653
       width: 1476
       height: 1212
     spriteID: b64bdf23d142341738ed7d3d69e34d53
@@ -134,8 +239,8 @@ ScriptedImporter:
     indices: 
     edges: []
     tessellationDetail: 0
-    uvTransform: {x: 4, y: 1236}
-    spritePosition: {x: 0, y: 0}
+    uvTransform: {x: 2428, y: 3653}
+    spritePosition: {x: 51, y: 0}
   characterData:
     bones: []
     parts: []
@@ -170,13 +275,63 @@ ScriptedImporter:
   resliceFromLayer: 0
   mosaicPSDLayers: []
   rigPSDLayers:
+  - name: dugeon_patch_3
+    spriteName: dugeon_patch_3
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 547ca9182805b4184aa2573a0055e4fa
+    layerID: 9
+    mosaicPosition: {x: 4, y: 5254}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: dungeon_patch
+    spriteName: dungeon_patch
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 195147514274f47ad8da0fc7f6a87ab3
+    layerID: 7
+    mosaicPosition: {x: 4, y: 6381}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: dungeon_patch
+    spriteName: dungeon_patch
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 1c6074b2d0c7f4a3aa802e5f30a56be9
+    layerID: 6
+    mosaicPosition: {x: 4, y: 4}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: dungeon_patch
+    spriteName: dungeon_patch
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 2a694b3a768b240429184525f41cfab6
+    layerID: 5
+    mosaicPosition: {x: 4, y: 2070}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
+  - name: dungeon_patch
+    spriteName: dungeon_patch
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 9e3def1b5b27d4eef82b729f8627f82c
+    layerID: 4
+    mosaicPosition: {x: 4, y: 3653}
+    flatten: 0
+    isImported: 1
+    isVisible: 1
   - name: dungeon_L
     spriteName: dungeon_L
     isGroup: 0
     parentIndex: -1
     spriteID: e87eca417f1584242b47194322a6553f
     layerID: 3
-    mosaicPosition: {x: 4, y: 4}
+    mosaicPosition: {x: 2508, y: 2070}
     flatten: 0
     isImported: 1
     isVisible: 1
@@ -186,7 +341,7 @@ ScriptedImporter:
     parentIndex: -1
     spriteID: b64bdf23d142341738ed7d3d69e34d53
     layerID: 2
-    mosaicPosition: {x: 4, y: 1236}
+    mosaicPosition: {x: 2428, y: 3653}
     flatten: 0
     isImported: 1
     isVisible: 1
