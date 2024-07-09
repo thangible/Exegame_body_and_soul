@@ -51,6 +51,9 @@ public class PlayerController : MonoBehaviour
     //private bool canWallJump = true;
     private bool canDoubleJump = true;
 
+    public float jumpCoolDownTime = 0.5f;
+    private float jumpCoolDownTimer = 0f;
+
     [Range(0f, 1f)] public float jumpBufferTime = 0.1f;
     [Range(0f, 1f)] public float jumpCoyoteTime = 0.1f;
     private float jumpBufferTimer = 10f;
@@ -342,6 +345,7 @@ public class PlayerController : MonoBehaviour
         jumpBufferTimer += Time.deltaTime;
         timeSinceLastJump += Time.deltaTime;
 
+        jumpCoolDownTimer += Time.deltaTime;
         timeSinceLastJumpCompleted += Time.deltaTime;
         timeSinceLastFallCompleted += Time.deltaTime;
 
@@ -424,7 +428,7 @@ public class PlayerController : MonoBehaviour
             InitializeJump(false);
         }
         // Double Jump
-        else if (jumpBufferTimer < jumpBufferTime && (IsJumping || _isJumpFalling) && (jumpCounter < 2 && timeSinceLastJump > doubleJumpCooldown && canDoubleJump))
+        else if (jumpBufferTimer < jumpBufferTime && (IsJumping || _isJumpFalling) && (jumpCounter < 2 && timeSinceLastJump > doubleJumpCooldown && canDoubleJump) && jumpCoolDownTimer > jumpCoolDownTime)
         {
             InitializeJump(true);
         }
@@ -740,6 +744,7 @@ public class PlayerController : MonoBehaviour
             //if (!touchingDirections.IsOnWall && !touchingDirections.IsOnCeiling)
             //print("hit the ground after JUMP falling");
             animator.SetTrigger(AnimationStrings.impactAfterJumpFalling);
+            animator.ResetTrigger(AnimationStrings.jump);
 
             if (!disabledDoubleJump)
             {
@@ -747,6 +752,7 @@ public class PlayerController : MonoBehaviour
 
             }
 
+            jumpCoolDownTimer = 0f;
             jumpCounter = 0;
             jumpCoyoteTimer = 0f;
 
@@ -851,10 +857,10 @@ public class PlayerController : MonoBehaviour
                 bool stopDash = false; // stop when hitting ground layer
 
                 // show box
-                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), UnityEngine.Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), UnityEngine.Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), UnityEngine.Color.red);
-                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), UnityEngine.Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), UnityEngine.Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), UnityEngine.Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), UnityEngine.Color.red);
+                //Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), UnityEngine.Color.red);
                 
 
                 if (numHits > 0)
