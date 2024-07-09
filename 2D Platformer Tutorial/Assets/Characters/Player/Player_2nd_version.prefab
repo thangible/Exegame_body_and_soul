@@ -738,7 +738,7 @@ MonoBehaviour:
   dashingDistance: 9
   dashingCooldown: 1
   dashGroundInteruptionFactor: 1.5
-  dashGroundDetectionYOffset: 2.5
+  dashGroundDetectionYOffset: 3
   attackRange: 4
   attackDamage: 1
   attackCooldown: 0.6

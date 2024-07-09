@@ -292,6 +292,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private CapsuleCollider2D playerCollider;
     Animator animator;
     [SerializeField] private TrailRenderer trailRenderer;
+    //[SerializeField] private Vector3 trailRendererOffset;
 
     public string oneWayPlatformLayerName = "OneWayPlatform";
     public string playerLayerName = "Player";
@@ -314,6 +315,10 @@ public class PlayerController : MonoBehaviour
         original_jumpImpulse = jumpImpulse;
 
         original_gravityScale = rb.gravityScale;
+    }
+
+    private void Start()
+    {
     }
 
 
