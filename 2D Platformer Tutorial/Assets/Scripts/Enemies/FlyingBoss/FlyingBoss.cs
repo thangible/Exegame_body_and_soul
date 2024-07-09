@@ -553,6 +553,7 @@ public class FlyingBoss : MonoBehaviour
                             while (!routineFound)
                             {
                                 float randomNumber = Random.value;
+                                randomNumber = 0.4f;
 
                                 if (randomNumber < 0.25f)
                                 {
@@ -661,7 +662,7 @@ public class FlyingBoss : MonoBehaviour
 
                 if (projectilesFired % 12 == 0)
                 {
-                    projectileTimer = 0 - 0.3f;
+                    projectileTimer = 0 - 2f;
                 }
                 if (projectilesFired >= quickAttackProjectilesFiredRoutine1)
                 {
@@ -711,15 +712,15 @@ public class FlyingBoss : MonoBehaviour
 
                 if (projectilesFired % 3 == 0)
                 {
-                    projectileTimer = 0 - 0.1f;
+                    projectileTimer = 0 - 0.2f;
                 } else if (projectilesFired % 8 == 0)
                 {
-                    projectileTimer = 0 - 0.1f;
+                    projectileTimer = 0 - 0.2f;
                 }
 
                 if (projectilesFired % 6 == 0)
                 {
-                    projectileTimer = 0 - 0.2f;
+                    projectileTimer = 0 - 0.4f;
 
                     float randomNumber = Random.value;
                     if (randomNumber < 0.50f)
@@ -762,17 +763,17 @@ public class FlyingBoss : MonoBehaviour
 
                 if (projectilesFired % 2 == 0)
                 {
-                    projectileTimer = 0 - 1.1f;
+                    projectileTimer = 0 - 1.7f;
 
                     for (int i = 0; i < routine4Pattern.Length; i++)
                     {
                         if (i <= 5)
                         {
-                            routine4Pattern[i] = Random.Range(10, 50);
+                            routine4Pattern[i] = Random.Range(11, 111);
                         }
                         else
                         {
-                            routine4Pattern[i] = Random.Range(51, 111);
+                            routine4Pattern[i] = Random.Range(11, 111); // feature removed
                         }
                     }
                 }
@@ -876,7 +877,7 @@ public class FlyingBoss : MonoBehaviour
 
                 if (projectilesFired % 15 == 0)
                 {
-                    projectileTimer = 0 - 0.3f;
+                    projectileTimer = 0 - 0.5f;
                 }
             }
         }

@@ -81,7 +81,7 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
                 // button pressed in the last time
                 if (Time.time - lastBlockMoveTime <= blockMoveTimeframe)
                 {
-                    Destroy(gameObject);
+                    //Destroy(gameObject);
                 }
             }
         }
@@ -97,6 +97,7 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
         {
             Vector3 direction = player.transform.position - transform.position;
             direction.Normalize();
+
             transform.position += direction * force * Time.deltaTime;
 
             float rot = Mathf.Atan2(-direction.y, -direction.x) * Mathf.Rad2Deg;
@@ -125,6 +126,7 @@ public class QuickProjectileCollisionCourseScript : MonoBehaviour
     public void OnPlayerAttackMove()
     {
         lastBlockMoveTime = Time.time;
+        Destroy(gameObject);
     }
 
 

@@ -91,7 +91,7 @@ public class SlowProjectileScript : MonoBehaviour
                 if (Time.time - lastAttackMoveTime <= attackMoveTimeframe)
                 {
                     changedDirectionToEnemy = true;
-                    redirectProjectile();
+                    //redirectProjectile();
 
                     trailRenderer.enabled = true;
                 }
@@ -166,6 +166,7 @@ public class SlowProjectileScript : MonoBehaviour
     public void OnPlayerAttackMove()
     {
         lastAttackMoveTime = Time.time;
+        redirectProjectile();
     }
 
 

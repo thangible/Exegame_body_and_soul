@@ -78,6 +78,11 @@ public class ProgressController : MonoBehaviour
         hasPickedUpAttack = true;
     }
 
+    public void SetNOTPickedUpAttack()
+    {
+        hasPickedUpAttack = false;
+    }
+
     public bool HasPickedUpAttack()
     {
         return hasPickedUpAttack;

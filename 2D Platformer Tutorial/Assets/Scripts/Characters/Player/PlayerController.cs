@@ -851,10 +851,10 @@ public class PlayerController : MonoBehaviour
                 bool stopDash = false; // stop when hitting ground layer
 
                 // show box
-                //Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), Color.red);
-                //Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), Color.red);
-                //Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), Color.red);
-                //Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), Color.red);
+                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), UnityEngine.Color.red);
+                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, -boxSize.y / 2), boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), UnityEngine.Color.red);
+                Debug.DrawLine(boxOrigin + new Vector2(boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), UnityEngine.Color.red);
+                Debug.DrawLine(boxOrigin + new Vector2(-boxSize.x / 2, boxSize.y / 2), boxOrigin + new Vector2(-boxSize.x / 2, -boxSize.y / 2), UnityEngine.Color.red);
                 
 
                 if (numHits > 0)
@@ -958,11 +958,11 @@ public class PlayerController : MonoBehaviour
         Vector2 attackPosition = (Vector2)transform.position + attackDirection * attackRange;
         Collider2D[] hitObjects = Physics2D.OverlapCircleAll(attackPosition, attackRange);
 
+
         // Damage or destroy them if they have the destroyableTag
         foreach (Collider2D hit in hitObjects)
         {
             // fetch object to remove hp
-
             DestroyableObject destroyableObject = hit.GetComponent<DestroyableObject>();
             if (destroyableObject != null)
             {
@@ -987,6 +987,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(attackCooldown);
         canAttack = true;
     }
+
 
     private void AttackBossProjectiles(Collider2D hit)
     {
