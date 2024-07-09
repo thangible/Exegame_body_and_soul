@@ -3,7 +3,15 @@
   "WorkspaceRootPath": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\assets\\scripts\\enemies\\flyingboss\\quickprojectilecollisioncoursescript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\assets\\scripts\\objects\\windarea.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\objects\\windarea.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\assets\\scripts\\characters\\player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\characters\\player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|c:\\users\\adrian\\gitunihamburg\\igd\\igdss24-groupa\\2d platformer tutorial\\assets\\scripts\\enemies\\flyingboss\\quickprojectilecollisioncoursescript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\enemies\\flyingboss\\quickprojectilecollisioncoursescript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -11,12 +19,8 @@
       "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\enemies\\flyingboss\\slowprojectilescript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|c:\\users\\adrian\\gitunihamburg\\igd\\igdss24-groupa\\2d platformer tutorial\\assets\\scripts\\enemies\\flyingboss\\quickprojectilescript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\assets\\scripts\\enemies\\flyingboss\\quickprojectilescript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\enemies\\flyingboss\\quickprojectilescript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|c:\\users\\adrian\\gitunihamburg\\igd\\igdss24-groupa\\2d platformer tutorial\\assets\\scripts\\characters\\player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\characters\\player\\playercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\assets\\scripts\\enemies\\flyingboss\\flyingboss.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -63,10 +67,6 @@
       "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\camera\\camerascript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\assets\\scripts\\objects\\windarea.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\objects\\windarea.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\assets\\scripts\\utility\\startanimationatrandomframe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D4645EDE-A81C-443B-6B64-9D0E6AE7BC03}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\utility\\startanimationatrandomframe.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -106,11 +106,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 8,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "QuickProjectileScript.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Enemies\\FlyingBoss\\QuickProjectileScript.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Enemies\\FlyingBoss\\QuickProjectileScript.cs",
@@ -118,12 +118,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Enemies\\FlyingBoss\\QuickProjectileScript.cs",
               "ViewState": "AQIAAI0AAAAAAAAAAAAQwJQAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-09T19:59:09.952Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-09T19:59:09.952Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "FlyingBoss_SleepingState.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Enemies\\FlyingBoss\\FlyingBoss_SleepingState.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Enemies\\FlyingBoss\\FlyingBoss_SleepingState.cs",
@@ -135,7 +134,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "SlowProjectileScript.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Enemies\\FlyingBoss\\SlowProjectileScript.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Enemies\\FlyingBoss\\SlowProjectileScript.cs",
@@ -143,12 +142,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Enemies\\FlyingBoss\\SlowProjectileScript.cs",
               "ViewState": "AQIAACgAAAAAAAAAAAAQwDcAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T20:26:54.203Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-08T20:26:54.203Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "FlyingBoss.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Enemies\\FlyingBoss\\FlyingBoss.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Enemies\\FlyingBoss\\FlyingBoss.cs",
@@ -156,12 +154,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Enemies\\FlyingBoss\\FlyingBoss.cs",
               "ViewState": "AQIAAEoCAAAAAAAAAAAmwFMCAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T20:23:41.421Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-08T20:23:41.421Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "CameraTriggerZone.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Camera\\CameraTriggerZone.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Camera\\CameraTriggerZone.cs",
@@ -173,20 +170,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "PlayerController.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Characters\\Player\\PlayerController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Characters\\Player\\PlayerController.cs",
               "ToolTip": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Characters\\Player\\PlayerController.cs",
               "RelativeToolTip": "Assets\\Scripts\\Characters\\Player\\PlayerController.cs",
-              "ViewState": "AQIAANcDAAAAAAAAAAAtwOIDAAAFAAAA",
+              "ViewState": "AQIAAGAAAAAAAAAAAAAgwG4AAAAGAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-07T22:46:02.482Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "TouchingDirections.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Characters\\Player\\TouchingDirections.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Characters\\Player\\TouchingDirections.cs",
@@ -198,7 +195,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "MovingPlatform.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Objects\\MovingPlatform.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Objects\\MovingPlatform.cs",
@@ -210,7 +207,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "QuickProjectileCollisionCourseScript.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Enemies\\FlyingBoss\\QuickProjectileCollisionCourseScript.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Enemies\\FlyingBoss\\QuickProjectileCollisionCourseScript.cs",
@@ -223,7 +220,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
+              "Title": "WindArea.cs",
+              "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Objects\\WindArea.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Objects\\WindArea.cs",
+              "ToolTip": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Objects\\WindArea.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Objects\\WindArea.cs",
+              "ViewState": "AQIAAI8AAAAAAAAAAAAEwKQAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-08T20:44:22.389Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "ProgressController.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Progress\\ProgressController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Progress\\ProgressController.cs",
@@ -235,7 +245,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 7,
               "Title": "PuzzleTeleporter.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Objects\\PuzzleTeleporter.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Objects\\PuzzleTeleporter.cs",
@@ -247,7 +257,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "RespawnController.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Progress\\RespawnController.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Progress\\RespawnController.cs",
@@ -259,7 +269,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "ObjectInstantiator.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Objects\\ObjectInstantiator.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Objects\\ObjectInstantiator.cs",
@@ -271,7 +281,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "NPC.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Characters\\NPC.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Characters\\NPC.cs",
@@ -307,7 +317,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 15,
               "Title": "CameraScript.cs",
               "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Camera\\CameraScript.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Camera\\CameraScript.cs",
@@ -340,18 +350,6 @@
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-08T20:27:49.684Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
-              "Title": "WindArea.cs",
-              "DocumentMoniker": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Objects\\WindArea.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Objects\\WindArea.cs",
-              "ToolTip": "C:\\Users\\Adrian\\GitUniHamburg\\IGD\\igdss24-groupa\\2D Platformer Tutorial\\Assets\\Scripts\\Objects\\WindArea.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Objects\\WindArea.cs",
-              "ViewState": "AQIAAI8AAAAAAAAAAAAEwJcAAABrAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T20:44:22.389Z"
             },
             {
               "$type": "Document",
