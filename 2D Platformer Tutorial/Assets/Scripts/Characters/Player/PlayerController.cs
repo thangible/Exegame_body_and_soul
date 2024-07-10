@@ -1146,6 +1146,15 @@ public void PerformJump()
 {
     jumpBufferTimer = 0f; // Simulate jump input delay
 
+
+        foreach (PuzzlePlatform puzzlePlatform in puzzlePlatforms)
+    {
+        if (touchingDirections.IsGrounded)
+        {
+            puzzlePlatform.SwitchPlatforms();
+        }
+    }
+
     // Double Jump logic
     if (jumpBufferTimer < jumpBufferTime && (IsJumping || _isJumpFalling) && (jumpCounter < 2 && timeSinceLastJump > doubleJumpCooldown && canDoubleJump))
     {

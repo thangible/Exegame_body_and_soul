@@ -66,10 +66,10 @@ MonoBehaviour:
   soundEffects:
   - groupID: Pickup
     clips:
-    - {fileID: 8300000, guid: c212ec8d930fd624d861f5b699ef09f6, type: 3}
+    - {fileID: 0}
   - groupID: Jump
     clips:
-    - {fileID: 8300000, guid: c212ec8d930fd624d861f5b699ef09f6, type: 3}
+    - {fileID: 0}
   - groupID: Dash
     clips:
     - {fileID: 8300000, guid: c212ec8d930fd624d861f5b699ef09f6, type: 3}
@@ -78,13 +78,13 @@ MonoBehaviour:
     - {fileID: 8300000, guid: c212ec8d930fd624d861f5b699ef09f6, type: 3}
   - groupID: Destroy
     clips:
-    - {fileID: 8300000, guid: c212ec8d930fd624d861f5b699ef09f6, type: 3}
+    - {fileID: 0}
   - groupID: Click
     clips:
-    - {fileID: 8300000, guid: 12c4f24556c43fa42a5051e24df02eb2, type: 3}
+    - {fileID: 0}
   - groupID: Death
     clips:
-    - {fileID: 8300000, guid: c212ec8d930fd624d861f5b699ef09f6, type: 3}
+    - {fileID: 0}
 --- !u!114 &5343576329715151082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,21 +113,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tracks:
   - trackName: MainMenu
-    clip: {fileID: 8300000, guid: cf07eaf88426f8e4e93d4cfdce196dad, type: 3}
+    clip: {fileID: 8300000, guid: b3caf75b51191a441961989747a9be0e, type: 3}
   - trackName: PauseMenuOLD
     clip: {fileID: 0}
   - trackName: FinishMenu
-    clip: {fileID: 8300000, guid: cf07eaf88426f8e4e93d4cfdce196dad, type: 3}
+    clip: {fileID: 8300000, guid: b3caf75b51191a441961989747a9be0e, type: 3}
   - trackName: Level1
-    clip: {fileID: 8300000, guid: b94ac459555beec40bce0b31829af383, type: 3}
+    clip: {fileID: 8300000, guid: b308754f3ec510849addf37f70ce7627, type: 3}
   - trackName: Level2
-    clip: {fileID: 8300000, guid: b94ac459555beec40bce0b31829af383, type: 3}
+    clip: {fileID: 8300000, guid: 5c09d710f38d23d41a3f3f2a557cdf31, type: 3}
   - trackName: Level2_Boss
-    clip: {fileID: 8300000, guid: 3b0ec441803066544aa68fb8d9c65723, type: 3}
+    clip: {fileID: 8300000, guid: 5c09d710f38d23d41a3f3f2a557cdf31, type: 3}
   - trackName: Level2_PreBoss
-    clip: {fileID: 8300000, guid: b94ac459555beec40bce0b31829af383, type: 3}
+    clip: {fileID: 8300000, guid: 5c09d710f38d23d41a3f3f2a557cdf31, type: 3}
   - trackName: Level2_PostBoss
-    clip: {fileID: 8300000, guid: b94ac459555beec40bce0b31829af383, type: 3}
+    clip: {fileID: 8300000, guid: 5c09d710f38d23d41a3f3f2a557cdf31, type: 3}
 --- !u!1 &4691842236501569870
 GameObject:
   m_ObjectHideFlags: 0

@@ -717,7 +717,7 @@ MonoBehaviour:
   baseDownForceMagnitude: 10
   maxDownForceMagnitude: 60
   maxRunSpeed: 20
-  jumpImpulse: 13
+  jumpImpulse: 14
   maxAirJumpSpeed: 18
   maxIdleForceIncrease: 1.1
   jumpGravityScaleFactor: 1.8
@@ -728,18 +728,22 @@ MonoBehaviour:
   doubleJumpCooldown: 0.2
   maxDoubleJumpForceReduction: 2
   disableDoubleJumpThreshold: 18
+  jumpCoolDownTime: 0.1
   jumpBufferTime: 0.1
   jumpCoyoteTime: 0.3
-  fallDamageThreshold: 20
-  fallDamageAfterJumpingThreshold: 25
+  fallDamageThreshold: 22
+  fallDamageAfterJumpingThreshold: 27
   fallingGravityFactor: 1.3
+  noFallDamageObjectDistance: 5
   dashingImpulse: 30
   dashingDistance: 9
   dashingCooldown: 1
-  attackRange: 4
+  dashGroundInteruptionFactor: 1
+  dashGroundDetectionYOffset: 3.5
+  attackRange: 5
   attackDamage: 1
-  attackCooldown: 0.6
-  bodySourceManager: {fileID: 3464436258943074437}
+  attackCooldown: 0.4
+  bodySourceManager: {fileID: 0}
   _isMoving: 0
   _isRunning: 0
   _isFacingRight: 1
