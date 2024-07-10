@@ -560,8 +560,8 @@ MonoBehaviour:
   speechCanvas: {fileID: 7453734123878110872}
   speechText: {fileID: 5091880525823498575}
   speechIndex: 0
-  horizontalOffset: 10
-  verticalOffset: 10
+  horizontalOffset: 9
+  verticalOffset: 12
   showToRight: 1
   _isIdle: 1
   _isInteracting: 0

@@ -52,11 +52,13 @@ public class NPC : MonoBehaviour
 
 
     private string[] speech = {
-        "Welcome to the realm \nbetween life & death.\n\nJump and run to traverse \nthese lands, but remain vigilant!",
+        "Welcome to this realm \nbetween life & death.\n\nJump and run to traverse \nthese lands, but remain vigilant!",
 
-        "There is a big gap in front of you. \nTry to activate the dash ability.",
+        "There is a big gap ahead!\n\nTry to activate the dash ability\nor perform a very long jump.",
 
-        "Here, collect this powerful orb! \nThis will surely be of use\n when trying to apply force."
+        "Collect this powerful orb! \nIt will surely be of use\n when trying to apply force.\n\n Can you think of something\nto attack?",
+
+        "Now you know everything\n I can teach you.\n\nGood luck on your journey\nto escape this place!"
     };
 
 
