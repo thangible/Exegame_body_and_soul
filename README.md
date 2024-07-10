@@ -4,7 +4,7 @@
 
 # IGD Game Repository - Group A
 
-The game is a 2D action side-scroller with working Kinect controls.
+The game is a 2D action side-scroller with working Kinect controls. The executable file of the game can be found in the game_exe folder at the root of the directory.
 
 ## Quickstart
 
