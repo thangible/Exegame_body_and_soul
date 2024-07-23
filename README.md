@@ -6,6 +6,10 @@
 
 The game is a 2D action side-scroller with working Kinect controls. The executable file of the game can be found in the game_exe folder at the root of the repository.
 
+
+[![Watch the video](https://img.youtube.com/vi/pjw9g_TFpIw/0.jpg)](https://youtu.be/pjw9g_TFpIw)
+
+
 ## Quickstart
 
  - First of all, install Git LFS to be able to clone the repository correctly (https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage)
